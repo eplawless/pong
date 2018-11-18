@@ -193,19 +193,19 @@ void D3D::GetVideoCardInfo(
 	out_videoCardMemoryInMB = m_videoCardMemoryInMB;
 }
 
-void D3D::GetProjectionMatrix(DirectX::XMMATRIX &out_projectionMatrix)
+DirectX::XMMATRIX D3D::GetProjectionMatrix()
 {
-	out_projectionMatrix = XMLoadFloat4x4(&m_projectionMatrix);
+	return XMLoadFloat4x4(&m_projectionMatrix);
 }
 
-void D3D::GetWorldMatrix(DirectX::XMMATRIX &out_worldMatrix)
+DirectX::XMMATRIX D3D::GetWorldMatrix()
 {
-	out_worldMatrix = XMLoadFloat4x4(&m_worldMatrix);
+	return XMLoadFloat4x4(&m_worldMatrix);
 }
 
-void D3D::GetOrthoMatrix(DirectX::XMMATRIX &out_orthoMatrix)
+DirectX::XMMATRIX D3D::GetOrthoMatrix()
 {
-	out_orthoMatrix = XMLoadFloat4x4(&m_orthoMatrix);
+	return XMLoadFloat4x4(&m_orthoMatrix);
 }
 
 bool D3D::InitializeDeviceInfo(
@@ -329,7 +329,7 @@ bool D3D::InitializeSwapChainAndDevice(
 
 	D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_1;
 
-	HRESULT didCreateDeviceAndSwapChain = D3D11CreateDeviceAndSwapChain(
+	HRESULT deviceAndSwapChainOk = D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -343,7 +343,7 @@ bool D3D::InitializeSwapChainAndDevice(
 		nullptr,
 		out_pDeviceContext
 	);
-	if (FAILED(didCreateDeviceAndSwapChain))
+	if (FAILED(deviceAndSwapChainOk))
 	{
 		return false;
 	}

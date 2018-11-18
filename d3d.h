@@ -2,9 +2,11 @@
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 
 #include <dxgi.h>
 #include <d3d11.h>
+#include <d3dcompiler.h>
 #include <DirectXMath.h>
 
 class D3D
@@ -34,9 +36,9 @@ public: // methods
 		size_t maxVideoCardNameLength, 
 		int32_t &out_videoCardMemoryInMB);
 
-	void GetProjectionMatrix(DirectX::XMMATRIX &out_projectionMatrix);
-	void GetWorldMatrix(DirectX::XMMATRIX &out_worldMatrix);
-	void GetOrthoMatrix(DirectX::XMMATRIX &out_orthoMatrix);
+	DirectX::XMMATRIX GetProjectionMatrix();
+	DirectX::XMMATRIX GetWorldMatrix();
+	DirectX::XMMATRIX GetOrthoMatrix();
 
 private: // methods
 	bool InitializeDeviceInfo(
