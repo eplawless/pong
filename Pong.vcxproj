@@ -56,9 +56,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Dependencies\DirectXTK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Dependencies\DirectXTK\Bin\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -76,11 +78,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Dependencies\DirectXTK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Dependencies\DirectXTK\Bin\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -97,8 +101,11 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="shader.cpp" />
     <ClCompile Include="system.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="texture-shader.cpp" />
+    <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
@@ -109,24 +116,37 @@
     <ClInclude Include="graphics.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="texture-shader.h" />
+    <ClInclude Include="texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="color.ps">
+    <FxCompile Include="color-ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="color.vs">
+    <FxCompile Include="color-vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="texture-ps.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="texture-vs.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

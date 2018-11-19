@@ -3,11 +3,14 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "DirectXTK.lib")
 
 #include <dxgi.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+
+#include "utility.h"
 
 class D3D
 {
@@ -28,8 +31,8 @@ public: // methods
 	void BeginScene(float red, float green, float blue, float alpha);
 	void EndScene();
 
-	ID3D11Device *GetDevice() { return m_pDevice; }
-	ID3D11DeviceContext *GetDeviceContext() { return m_pDeviceContext; }
+	ID3D11Device *GetDevice() { return m_pDevice.Get(); }
+	ID3D11DeviceContext *GetDeviceContext() { return m_pDeviceContext.Get(); }
 
 	void GetVideoCardInfo(
 		char *out_videoCardName, 
@@ -94,14 +97,14 @@ private: // members
 	bool m_isFullscreen;
 	uint32_t m_videoCardMemoryInMB;
 	char m_videoCardDescription[VIDEO_CARD_DESCRIPTION_MAX_LENGTH];
-	IDXGISwapChain *m_pSwapChain;
-	ID3D11Device *m_pDevice;
-	ID3D11DeviceContext *m_pDeviceContext;
-	ID3D11RenderTargetView *m_pRenderTargetView;
-	ID3D11Texture2D *m_pDepthStencilBuffer;
-	ID3D11DepthStencilState *m_pDepthStencilState;
-	ID3D11DepthStencilView *m_pDepthStencilView;
-	ID3D11RasterizerState *m_pRasterizerState;
+	ScopedD3DPointer<IDXGISwapChain> m_pSwapChain;
+	ScopedD3DPointer<ID3D11Device> m_pDevice;
+	ScopedD3DPointer<ID3D11DeviceContext> m_pDeviceContext;
+	ScopedD3DPointer<ID3D11RenderTargetView> m_pRenderTargetView;
+	ScopedD3DPointer<ID3D11Texture2D> m_pDepthStencilBuffer;
+	ScopedD3DPointer<ID3D11DepthStencilState> m_pDepthStencilState;
+	ScopedD3DPointer<ID3D11DepthStencilView> m_pDepthStencilView;
+	ScopedD3DPointer<ID3D11RasterizerState> m_pRasterizerState;
 	DirectX::XMFLOAT4X4 m_projectionMatrix;
 	DirectX::XMFLOAT4X4 m_worldMatrix;
 	DirectX::XMFLOAT4X4 m_orthoMatrix;

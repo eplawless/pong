@@ -14,11 +14,23 @@ Model::Model()
 bool Model::Initialize(
 	ID3D11Device *pDevice)
 {
-	return InitializeBuffers(pDevice);
+	TCHAR *textureFilename = TEXT("../Pong/Textures/example.gif");
+	if (!m_texture.Initialize(pDevice, textureFilename))
+	{
+		return false;
+	}
+
+	if (!InitializeBuffers(pDevice))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void Model::Shutdown()
 {
+	m_texture.Shutdown();
 	ShutdownBuffers();
 }
 
@@ -33,9 +45,7 @@ bool Model::InitializeBuffers(
 {
 	std::vector<VertexType> arrVertices;
 	std::vector<uint32_t> arrIndices;
-	DirectX::XMFLOAT4 green{ 0.0f, 1.0f, 0.0f, 1.0f };
-	DirectX::XMFLOAT4 red{ 1.0f, 0.0f, 0.0f, 1.0f };
-	CreateTriangle(red, &m_vertexCount, &m_indexCount, &arrVertices, &arrIndices);
+	CreateTriangle(&m_vertexCount, &m_indexCount, &arrVertices, &arrIndices);
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -103,7 +113,6 @@ void Model::RenderBuffers(
 }
 
 void Model::CreateTriangle(
-	const DirectX::XMFLOAT4 &color,
 	uint32_t *out_vertexCount,
 	uint32_t *out_indexCount,
 	std::vector<VertexType> *out_arrVertices, 
@@ -116,11 +125,11 @@ void Model::CreateTriangle(
 	out_arrIndices->resize(*out_indexCount);
 
 	(*out_arrVertices)[0].position = DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f); // bottom left
-	(*out_arrVertices)[0].color = color;
+	(*out_arrVertices)[0].uv = DirectX::XMFLOAT2(0.0f, 1.0f);
 	(*out_arrVertices)[1].position = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f); // top middle
-	(*out_arrVertices)[1].color = color;
+	(*out_arrVertices)[1].uv = DirectX::XMFLOAT2(0.5f, 0.0f);
 	(*out_arrVertices)[2].position = DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f); // bottom right
-	(*out_arrVertices)[2].color = color;
+	(*out_arrVertices)[2].uv = DirectX::XMFLOAT2(1.0f, 1.0f);
 
 	(*out_arrIndices)[0] = 0; // bottom left
 	(*out_arrIndices)[1] = 1; // top middle

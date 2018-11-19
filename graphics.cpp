@@ -22,7 +22,7 @@ bool Graphics::Initialize(uint32_t screenWidth, uint32_t screenHeight, HWND hwnd
 
 	if (!m_shader.Initialize(pDevice, hwnd))
 	{
-		MessageBox(hwnd, TEXT("Could not initialize the color shader object."), TEXT("Error"), MB_OK);
+		MessageBox(hwnd, TEXT("Could not initialize the shader object."), TEXT("Error"), MB_OK);
 		return false;
 	}
 	
@@ -45,6 +45,14 @@ void Graphics::Update(int64_t usDeltaTime)
 	DirectX::XMMATRIX projectionMatrix = m_d3d.GetProjectionMatrix();
 	ID3D11DeviceContext *pDeviceContext = m_d3d.GetDeviceContext();
 	m_model.Render(pDeviceContext);
-	m_shader.Render(pDeviceContext, m_model.GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	ID3D11ShaderResourceView *pTexture = m_model.GetTexture();
+	m_shader.Render(
+		pDeviceContext, 
+		m_model.GetIndexCount(), 
+		worldMatrix, 
+		viewMatrix, 
+		projectionMatrix, 
+		pTexture
+	);
 	m_d3d.EndScene();
 }

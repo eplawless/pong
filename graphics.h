@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "model.h"
 #include "color-shader.h"
+#include "texture-shader.h"
 
 const bool FULLSCREEN_ENABLED = false;
 const bool VSYNC_ENABLED = true;
@@ -22,5 +23,6 @@ private: // members
 	D3D m_d3d;
 	Camera m_camera;
 	Model m_model;
-	ColorShader m_shader;
+	//ColorShader m_shader;
+	TextureShader m_shader;
 };

@@ -48,6 +48,15 @@
     <ClCompile Include="color-shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="texture-shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system.h">
@@ -80,13 +89,30 @@
     <ClInclude Include="color-shader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="texture-shader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="color.ps">
+    <FxCompile Include="color-ps.hlsl">
       <Filter>Source Files</Filter>
     </FxCompile>
-    <FxCompile Include="color.vs">
+    <FxCompile Include="color-vs.hlsl">
       <Filter>Source Files</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="texture-ps.hlsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="texture-vs.hlsl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
