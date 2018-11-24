@@ -59,7 +59,7 @@ Game::UpdateResult Game::Update(int64_t usDeltaTime)
 	{ 
 		return UpdateResult::Exit; 
 	}
-	m_graphics.Update(usDeltaTime);
+	m_graphics.Update(usDeltaTime, m_input);
 	return UpdateResult::Continue;
 }
 

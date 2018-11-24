@@ -34,20 +34,20 @@ DirectX::XMFLOAT3 Camera::GetRotation()
 	return DirectX::XMFLOAT3{ m_rotationX, m_rotationY, m_rotationZ };
 }
 
-void Camera::Render()
+void Camera::Update()
 {
 	float pitch = DirectX::XMConvertToRadians(m_rotationX);
 	float yaw = DirectX::XMConvertToRadians(m_rotationY);
 	float roll = DirectX::XMConvertToRadians(m_rotationZ);
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
 	DirectX::XMVECTOR up{ 0.0f, 1.0f, 0.0f, 0.0f };
 	DirectX::XMVECTOR position{ m_positionX, m_positionY, m_positionZ, 1.0f };
 	DirectX::XMVECTOR lookAt{ 0.0f, 0.0f, 1.0f, 1.0f };
 
-	lookAt = DirectX::XMVector3TransformCoord(lookAt, rotationMatrix);
+	lookAt = DirectX::XMVector3TransformCoord(lookAt, rotation);
 	lookAt = DirectX::XMVectorAdd(lookAt, position);
-	up = DirectX::XMVector3TransformCoord(up, rotationMatrix);
+	up = DirectX::XMVector3TransformCoord(up, rotation);
 
-	m_viewMatrix = DirectX::XMMatrixLookAtLH(position, lookAt, up);
+	m_worldToView = DirectX::XMMatrixLookAtLH(position, lookAt, up);
 }

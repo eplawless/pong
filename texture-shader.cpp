@@ -22,12 +22,12 @@ void TextureShader::Shutdown()
 bool TextureShader::Render(
 	ID3D11DeviceContext *pDeviceContext, 
 	uint32_t indexCount, 
-	DirectX::XMMATRIX worldMatrix, 
-	DirectX::XMMATRIX viewMatrix, 
-	DirectX::XMMATRIX projectionMatrix,
+	DirectX::XMMATRIX objectToWorld, 
+	DirectX::XMMATRIX worldToView, 
+	DirectX::XMMATRIX viewToClip,
 	ID3D11ShaderResourceView *pTexture)
 {
-	if (!SetShaderParameters(pDeviceContext, worldMatrix, viewMatrix, projectionMatrix, pTexture))
+	if (!SetShaderParameters(pDeviceContext, objectToWorld, worldToView, viewToClip, pTexture))
 	{
 		return false;
 	}
@@ -42,12 +42,12 @@ bool TextureShader::InitializeShader(
 	TCHAR *vsFilename, 
 	TCHAR *psFilename)
 {
-	auto onVertexShaderInitialized = [&](ID3D10Blob *pVertexShaderBuffer) -> bool
+	auto onVertexShaderInit = [&](ID3D10Blob *pVertexShaderBuffer) -> bool
 	{
-		return InitializeVertexLayout(pDevice, pVertexShaderBuffer, &m_pInputLayout.Get());
+		return InitializeInputLayout(pDevice, pVertexShaderBuffer, &m_pInputLayout.Get());
 	};
 
-	bool vsOk = InitializeVertexShader(pDevice, hwnd, vsFilename, "TextureVertexShader", &m_pVertexShader.Get(), onVertexShaderInitialized);
+	bool vsOk = InitializeVertexShader(pDevice, hwnd, vsFilename, "TextureVertexShader", &m_pVertexShader.Get(), onVertexShaderInit);
 	if (!vsOk)
 	{
 		return false;
@@ -59,7 +59,7 @@ bool TextureShader::InitializeShader(
 		return false;
 	}
 
-	bool cbOk = InitializeConstantBuffer<MatrixBufferType>(pDevice, &m_pMatrixBuffer.Get());
+	bool cbOk = InitializeConstantBuffer<MatrixBuffer>(pDevice, &m_pMatrixBuffer.Get());
 	if (!cbOk)
 	{
 		return false;
@@ -89,7 +89,7 @@ bool TextureShader::InitializeShader(
 	return true;
 }
 
-bool TextureShader::InitializeVertexLayout(
+bool TextureShader::InitializeInputLayout(
 	ID3D11Device *pDevice, 
 	ID3D10Blob *pVertexShaderBuffer, 
 	ID3D11InputLayout **out_pInputLayout)
@@ -138,33 +138,24 @@ void TextureShader::ShutdownShader()
 
 bool TextureShader::SetShaderParameters(
 	ID3D11DeviceContext *pDeviceContext, 
-	DirectX::XMMATRIX worldMatrix, 
-	DirectX::XMMATRIX viewMatrix, 
-	DirectX::XMMATRIX projectionMatrix,
+	DirectX::XMMATRIX objectToWorld, 
+	DirectX::XMMATRIX worldToView, 
+	DirectX::XMMATRIX viewToClip,
 	ID3D11ShaderResourceView *pTexture)
 {
-	worldMatrix = DirectX::XMMatrixTranspose(worldMatrix);
-	viewMatrix = DirectX::XMMatrixTranspose(viewMatrix);
-	projectionMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
+	// transpose because default matrix packing is column major
+	MatrixBuffer columnMajorMatrixBuffer;
+	columnMajorMatrixBuffer.objectToWorld = DirectX::XMMatrixTranspose(objectToWorld);
+	columnMajorMatrixBuffer.worldToView = DirectX::XMMatrixTranspose(worldToView);
+	columnMajorMatrixBuffer.viewToClip = DirectX::XMMatrixTranspose(viewToClip);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	HRESULT lockBufferOk = pDeviceContext->Map(
-		m_pMatrixBuffer.Get(),
-		0,
-		D3D11_MAP_WRITE_DISCARD,
-		0,
-		&mappedResource
-	);
-	if (FAILED(lockBufferOk))
-	{
-		return false;
+	HRESULT lockBufferOk = pDeviceContext->Map(m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(lockBufferOk)) 
+	{ 
+		return false; 
 	}
-
-	MatrixBufferType* pConstantBufferData = static_cast<MatrixBufferType*>(mappedResource.pData);
-	pConstantBufferData->world = worldMatrix;
-	pConstantBufferData->view = viewMatrix;
-	pConstantBufferData->projection = projectionMatrix;
-
+	memcpy_s(mappedResource.pData, sizeof(MatrixBuffer), &columnMajorMatrixBuffer, sizeof(MatrixBuffer));
 	pDeviceContext->Unmap(m_pMatrixBuffer.Get(), 0);
 
 	uint32_t bufferNumber = 0;

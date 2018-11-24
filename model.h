@@ -16,14 +16,22 @@ private: // types
 	};
 
 public: // methods
-	Model();
 	bool Initialize(ID3D11Device *pDevice);
 	void Shutdown();
 	void Render(ID3D11DeviceContext *pDeviceContext);
-	uint32_t GetIndexCount() { return m_indexCount; }
+	uint32_t GetIndexCount() { return static_cast<uint32_t>(m_arrIndices.size()); }
 	ID3D11ShaderResourceView *GetTexture() { return m_texture.GetTexture(); }
 
+	Model(Model &&) = default;
+	Model &operator=(Model &&) = default;
+	Model(Model const &) = delete;
+	Model& operator=(Model const &) = delete;
+
+	static Model CreateQuad(float width, float height);
+
 private: // methods
+	Model();
+
 	bool InitializeBuffers(ID3D11Device *pDevice);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext *pDeviceContext);
@@ -39,6 +47,6 @@ private: // members
 
 	ID3D11Buffer *m_pVertexBuffer;
 	ID3D11Buffer *m_pIndexBuffer;
-	uint32_t m_vertexCount;
-	uint32_t m_indexCount;
+	std::vector<VertexType> m_arrVertices;
+	std::vector<uint32_t> m_arrIndices;
 };

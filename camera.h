@@ -12,8 +12,8 @@ public: // methods
 
 	DirectX::XMFLOAT3 GetPosition();
 	DirectX::XMFLOAT3 GetRotation();
-	DirectX::XMMATRIX GetViewMatrix() { return m_viewMatrix; }
-	void Render();
+	DirectX::XMMATRIX GetViewMatrix() { return m_worldToView; }
+	void Update();
 
 private: // members
 	float m_positionX;
@@ -22,5 +22,5 @@ private: // members
 	float m_rotationX;
 	float m_rotationY;
 	float m_rotationZ;
-	DirectX::XMMATRIX m_viewMatrix;
+	DirectX::XMMATRIX m_worldToView;
 };

@@ -6,8 +6,6 @@
 Model::Model()
 	: m_pVertexBuffer(nullptr)
 	, m_pIndexBuffer(nullptr)
-	, m_vertexCount(0)
-	, m_indexCount(0)
 {
 }
 
@@ -40,23 +38,42 @@ void Model::Render(
 	RenderBuffers(pDeviceContext);
 }
 
+Model Model::CreateQuad(float width, float height)
+{
+	Model result;
+	std::vector<VertexType> &arrVertices = result.m_arrVertices;
+	std::vector<uint32_t> &arrIndices = result.m_arrIndices;
+
+	arrVertices.resize(4);
+	arrIndices.resize(6);
+
+	arrVertices[0].position = DirectX::XMFLOAT3(0.0f, -height, 0.0f); // bottom left
+	arrVertices[0].uv = DirectX::XMFLOAT2(0.0f, 0.0f);
+	arrVertices[1].position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f); // top left
+	arrVertices[1].uv = DirectX::XMFLOAT2(0.0f, 1.0f);
+	arrVertices[2].position = DirectX::XMFLOAT3(width, -height, 0.0f); // bottom right
+	arrVertices[2].uv = DirectX::XMFLOAT2(1.0f, 0.0f);
+	arrVertices[3].position = DirectX::XMFLOAT3(width, 0.0f, 0.0f); // top right
+	arrVertices[3].uv = DirectX::XMFLOAT2(1.0f, 1.0f);
+
+	arrIndices = { 0, 1, 2, 2, 1, 3 };
+
+	return result;
+}
+
 bool Model::InitializeBuffers(
 	ID3D11Device *pDevice)
 {
-	std::vector<VertexType> arrVertices;
-	std::vector<uint32_t> arrIndices;
-	CreateTriangle(&m_vertexCount, &m_indexCount, &arrVertices, &arrIndices);
-
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * static_cast<uint32_t>(m_arrVertices.size());
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vertexData;
-	vertexData.pSysMem = arrVertices.data();
+	vertexData.pSysMem = m_arrVertices.data();
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -67,14 +84,14 @@ bool Model::InitializeBuffers(
 
 	D3D11_BUFFER_DESC indexBufferDesc;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(size_t) * m_indexCount;
+	indexBufferDesc.ByteWidth = sizeof(size_t) * static_cast<uint32_t>(m_arrIndices.size());
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA indexData;
-	indexData.pSysMem = arrIndices.data();
+	indexData.pSysMem = m_arrIndices.data();
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 

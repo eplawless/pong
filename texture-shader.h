@@ -11,11 +11,11 @@
 class TextureShader : Shader
 {
 private: // types
-	struct MatrixBufferType
+	struct MatrixBuffer
 	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX view;
-		DirectX::XMMATRIX projection;
+		DirectX::XMMATRIX objectToWorld;
+		DirectX::XMMATRIX worldToView;
+		DirectX::XMMATRIX viewToClip;
 	};
 
 public: // methods
@@ -24,9 +24,9 @@ public: // methods
 	bool Render(
 		ID3D11DeviceContext *pDeviceContext,
 		uint32_t indexCount,
-		DirectX::XMMATRIX worldMatrix,
-		DirectX::XMMATRIX viewMatrix,
-		DirectX::XMMATRIX projectionMatrix,
+		DirectX::XMMATRIX objectToWorld,
+		DirectX::XMMATRIX worldToView,
+		DirectX::XMMATRIX viewToClip,
 		ID3D11ShaderResourceView *pTexture);
 
 private: // methods
@@ -35,16 +35,16 @@ private: // methods
 		HWND hwnd,
 		TCHAR *vsFilename,
 		TCHAR *psFilename);
-	bool InitializeVertexLayout(
+	bool InitializeInputLayout(
 		ID3D11Device *pDevice,
 		ID3D10Blob *pVertexShaderBuffer,
 		ID3D11InputLayout **out_pInputLayout);
 	void ShutdownShader();
 	bool SetShaderParameters(
 		ID3D11DeviceContext *pDeviceContext,
-		DirectX::XMMATRIX worldMatrix,
-		DirectX::XMMATRIX viewMatrix,
-		DirectX::XMMATRIX projectionMatrix,
+		DirectX::XMMATRIX objectToWorld,
+		DirectX::XMMATRIX worldToView,
+		DirectX::XMMATRIX viewToClip,
 		ID3D11ShaderResourceView *pTexture);
 	void RenderShader(ID3D11DeviceContext *pDeviceContext, uint32_t indexCount);
 
