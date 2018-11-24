@@ -1,22 +1,24 @@
 #pragma once
 
-#include <cstdint>
 #include <d3d11.h>
+#include <DirectXMath.h>
 
 #include "input.h"
 #include "model.h"
+#include "paddle.h"
 #include "utility.h"
 #include "texture-shader.h"
 
-class Paddle
+class Ball
 {
 public: // methods
-	Paddle(float positionX);
+	Ball();
+	void Reset();
 	bool Initialize(ID3D11Device *pDevice);
 	void Shutdown();
-	void Update(uint64_t usdt, Input const &input);
+	void Update(uint64_t usdt, Paddle const &leftPaddle, Paddle const &rightPaddle);
 	void Render(
-		ID3D11DeviceContext *pDeviceContext, 
+		ID3D11DeviceContext *pDeviceContext,
 		TextureShader &shader,
 		DirectX::XMMATRIX objectToWorld,
 		DirectX::XMMATRIX worldToView,
@@ -26,8 +28,8 @@ public: // methods
 
 private: // members
 	Box2D m_bounds;
-	float m_moveSpeedY;
-	float m_height;
+	float m_velocityX;
+	float m_velocityY;
 
 	Model m_model;
 };

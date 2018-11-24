@@ -5,11 +5,9 @@
 float const S_PER_US = 1.0f / 1000000.0f;
 
 Paddle::Paddle(float positionX)
-	: m_positionX(positionX)
-	, m_positionY(0.0f)
+	: m_bounds{ positionX, 0.0f, 0.2f, 1.0f }
 	, m_moveSpeedY(1.0f)
-	, m_height(1.0f)
-	, m_model(Model::CreateQuad(0.2f, m_height))
+	, m_model(Model::CreateQuad(m_bounds.sizeX, m_bounds.sizeY))
 {
 }
 
@@ -31,7 +29,7 @@ void Paddle::Update(
 	float deltaPositionY = S_PER_US * usdt * m_moveSpeedY;
 	float movementUp = input.IsKeyDown(VK_UP) * deltaPositionY;
 	float movementDown = input.IsKeyDown(VK_DOWN) * deltaPositionY;
-	m_positionY += movementUp - movementDown;
+	m_bounds.positionY += movementUp - movementDown;
 }
 
 void Paddle::Render(
@@ -45,7 +43,7 @@ void Paddle::Render(
 	shader.Render(
 		pDeviceContext,
 		m_model.GetIndexCount(),
-		objectToWorld * DirectX::XMMatrixTranslation(m_positionX, m_positionY, 0.0f),
+		objectToWorld * DirectX::XMMatrixTranslation(m_bounds.positionX, m_bounds.positionY, 0.0f),
 		worldToView,
 		viewToClip,
 		m_model.GetTexture()

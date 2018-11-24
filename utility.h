@@ -34,3 +34,40 @@ public: // methods
 private: // members
 	ResourceType *m_pResource;
 };
+
+template <typename T>
+int sign(T value)
+{
+	return (T(0) < value) - (value < T(0));
+}
+
+struct Point2D
+{
+	float x;
+	float y;
+};
+
+struct Box2D
+{
+	float positionX;
+	float positionY;
+	float sizeX;
+	float sizeY;
+
+	Point2D GetCenter() const
+	{
+		return Point2D{ 
+			positionX + 0.5f * sizeX, 
+			positionY + 0.5f * sizeY 
+		};
+	}
+
+	bool Intersects(Box2D const &other) const
+	{
+		return !(positionX > (other.positionX + other.sizeX)
+			|| other.positionX > (positionX + sizeX)
+			|| positionY > (other.positionY + other.sizeY)
+			|| other.positionY > (positionY + sizeY)
+		);
+	}
+};

@@ -4,6 +4,7 @@
 #include "d3d.h"
 #include "camera.h"
 #include "paddle.h"
+#include "ball.h"
 #include "input.h"
 #include "color-shader.h"
 #include "texture-shader.h"
@@ -26,5 +27,6 @@ private: // members
 	Camera m_camera;
 	Paddle m_playerPaddle;
 	Paddle m_computerPaddle;
+	Ball m_ball;
 	TextureShader m_shader;
 };

@@ -47,13 +47,13 @@ Model Model::CreateQuad(float width, float height)
 	arrVertices.resize(4);
 	arrIndices.resize(6);
 
-	arrVertices[0].position = DirectX::XMFLOAT3(0.0f, -height, 0.0f); // bottom left
+	arrVertices[0].position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f); // bottom left
 	arrVertices[0].uv = DirectX::XMFLOAT2(0.0f, 0.0f);
-	arrVertices[1].position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f); // top left
+	arrVertices[1].position = DirectX::XMFLOAT3(0.0f, height, 0.0f); // top left
 	arrVertices[1].uv = DirectX::XMFLOAT2(0.0f, 1.0f);
-	arrVertices[2].position = DirectX::XMFLOAT3(width, -height, 0.0f); // bottom right
+	arrVertices[2].position = DirectX::XMFLOAT3(width, 0.0f, 0.0f); // bottom right
 	arrVertices[2].uv = DirectX::XMFLOAT2(1.0f, 0.0f);
-	arrVertices[3].position = DirectX::XMFLOAT3(width, 0.0f, 0.0f); // top right
+	arrVertices[3].position = DirectX::XMFLOAT3(width, height, 0.0f); // top right
 	arrVertices[3].uv = DirectX::XMFLOAT2(1.0f, 1.0f);
 
 	arrIndices = { 0, 1, 2, 2, 1, 3 };

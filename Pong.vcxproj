@@ -94,6 +94,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ball.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="color-shader.cpp" />
     <ClCompile Include="d3d.cpp" />
@@ -111,6 +112,7 @@
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ball.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color-shader.h" />
     <ClInclude Include="d3d.h" />
