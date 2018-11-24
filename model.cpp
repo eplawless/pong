@@ -128,27 +128,3 @@ void Model::RenderBuffers(
 	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
-
-void Model::CreateTriangle(
-	uint32_t *out_vertexCount,
-	uint32_t *out_indexCount,
-	std::vector<VertexType> *out_arrVertices, 
-	std::vector<uint32_t> *out_arrIndices)
-{
-	*out_vertexCount = 3;
-	*out_indexCount = 3;
-	
-	out_arrVertices->resize(*out_vertexCount);
-	out_arrIndices->resize(*out_indexCount);
-
-	(*out_arrVertices)[0].position = DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f); // bottom left
-	(*out_arrVertices)[0].uv = DirectX::XMFLOAT2(0.0f, 1.0f);
-	(*out_arrVertices)[1].position = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f); // top middle
-	(*out_arrVertices)[1].uv = DirectX::XMFLOAT2(0.5f, 0.0f);
-	(*out_arrVertices)[2].position = DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f); // bottom right
-	(*out_arrVertices)[2].uv = DirectX::XMFLOAT2(1.0f, 1.0f);
-
-	(*out_arrIndices)[0] = 0; // bottom left
-	(*out_arrIndices)[1] = 1; // top middle
-	(*out_arrIndices)[2] = 2; // bottom right
-}

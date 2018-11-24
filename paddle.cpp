@@ -5,8 +5,8 @@
 float const S_PER_US = 1.0f / 1000000.0f;
 
 Paddle::Paddle(float positionX)
-	: m_positionInWorldX(positionX)
-	, m_positionInWorldY(-1.0f)
+	: m_positionX(positionX)
+	, m_positionY(0.0f)
 	, m_moveSpeedY(1.0f)
 	, m_height(1.0f)
 	, m_model(Model::CreateQuad(0.2f, m_height))
@@ -29,7 +29,9 @@ void Paddle::Update(
 	Input const &input)
 {
 	float deltaPositionY = S_PER_US * usdt * m_moveSpeedY;
-	m_positionInWorldY += input.IsKeyDown(VK_UP) * deltaPositionY - input.IsKeyDown(VK_DOWN) * deltaPositionY;
+	float movementUp = input.IsKeyDown(VK_UP) * deltaPositionY;
+	float movementDown = input.IsKeyDown(VK_DOWN) * deltaPositionY;
+	m_positionY += movementUp - movementDown;
 }
 
 void Paddle::Render(
@@ -40,15 +42,12 @@ void Paddle::Render(
 	DirectX::XMMATRIX viewToClip)
 {
 	m_model.Render(pDeviceContext);
-	ID3D11ShaderResourceView *pTexture = m_model.GetTexture();
-
-	DirectX::XMMATRIX translate = DirectX::XMMatrixTranslation(m_positionInWorldX, m_positionInWorldY, 0.0f);
 	shader.Render(
 		pDeviceContext,
 		m_model.GetIndexCount(),
-		objectToWorld * translate,
+		objectToWorld * DirectX::XMMatrixTranslation(m_positionX, m_positionY, 0.0f),
 		worldToView,
 		viewToClip,
-		pTexture
+		m_model.GetTexture()
 	);
 }

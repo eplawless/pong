@@ -22,8 +22,8 @@ public: // methods
 		DirectX::XMMATRIX viewToClip);
 
 private: // members
-	float m_positionInWorldX;
-	float m_positionInWorldY;
+	float m_positionX;
+	float m_positionY;
 	float m_moveSpeedY;
 	float m_height;
 

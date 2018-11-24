@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 
 #include "texture.h"
+#include "utility.h"
 
 class Model
 {
@@ -35,12 +36,6 @@ private: // methods
 	bool InitializeBuffers(ID3D11Device *pDevice);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext *pDeviceContext);
-
-	void CreateTriangle(
-		uint32_t *out_vertexCount,
-		uint32_t *out_indexCount,
-		std::vector<VertexType> *out_arrVertices,
-		std::vector<uint32_t> *out_arrIndices);
 
 private: // members
 	Texture m_texture;

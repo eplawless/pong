@@ -25,5 +25,6 @@ private: // members
 	D3D m_d3d;
 	Camera m_camera;
 	Paddle m_playerPaddle;
+	Paddle m_computerPaddle;
 	TextureShader m_shader;
 };
