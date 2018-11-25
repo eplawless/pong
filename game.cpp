@@ -46,9 +46,9 @@ void Game::Run()
 		int64_t usFrameStartTime = m_timer.GetElapsedMicroseconds();
 		int64_t usDeltaTime = usFrameStartTime - usLastFrameStartTime;
 		usLastFrameStartTime = usFrameStartTime;
-		if (Update(usDeltaTime) == UpdateResult::Exit) 
-		{ 
-			break; 
+		if (Update(usDeltaTime) == UpdateResult::Exit)
+		{
+			break;
 		}
 
 		Render();
@@ -68,7 +68,10 @@ Game::UpdateResult Game::Update(int64_t usDeltaTime)
 	{ 
 		return UpdateResult::Exit; 
 	}
-	m_scene.Update(usDeltaTime, m_input);
+	if (!m_debugOverlay.GetOptions().isPaused)
+	{
+		m_scene.Update(usDeltaTime, m_input);
+	}
 	return UpdateResult::Continue;
 }
 

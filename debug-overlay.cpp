@@ -7,7 +7,6 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 
 DebugOverlay::DebugOverlay()
 	: m_isVisible(false)
-	, m_option(true)
 {
 }
 
@@ -45,7 +44,10 @@ void DebugOverlay::Render()
 	ImGui::NewFrame();
 
 	ImGui::Begin("Debug Menu");
-	ImGui::Checkbox("Okay Sure", &m_option);
+	if (ImGui::Button(m_options.isPaused ? "Unpause" : "Pause"))
+	{
+		m_options.isPaused = !m_options.isPaused;
+	}
 	ImGui::End();
 
 	ImGui::Render();
