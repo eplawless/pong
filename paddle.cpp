@@ -9,6 +9,12 @@ Paddle::Paddle(float positionX)
 	, m_moveSpeedY(1.0f)
 	, m_model(Model::CreateQuad(m_bounds.sizeX, m_bounds.sizeY))
 {
+	Reset();
+}
+
+void Paddle::Reset()
+{
+	m_bounds.positionY = 0.0f;
 }
 
 bool Paddle::Initialize(

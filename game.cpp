@@ -23,7 +23,7 @@ Game::~Game()
 void Game::Run()
 {
 	m_input.Reset();
-	m_graphics.Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, m_hWindow);
+	m_scene.Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, m_hWindow);
 
 	m_timer.Start();
 	int64_t usLastFrameStartTime = m_timer.GetElapsedMicroseconds();
@@ -46,21 +46,27 @@ void Game::Run()
 		int64_t usFrameStartTime = m_timer.GetElapsedMicroseconds();
 		int64_t usDeltaTime = usFrameStartTime - usLastFrameStartTime;
 		usLastFrameStartTime = usFrameStartTime;
-		Game::UpdateResult result = Update(usDeltaTime);
-		if (result == UpdateResult::Exit) { break; }
+		if (Update(usDeltaTime) == UpdateResult::Exit) 
+		{ 
+			break; 
+		}
+
+		Render();
 	}
 
-	m_graphics.Shutdown();
+	m_scene.Shutdown();
 }
 
 Game::UpdateResult Game::Update(int64_t usDeltaTime)
 {
-	if (m_input.IsKeyDown(VK_ESCAPE)) 
-	{ 
-		return UpdateResult::Exit; 
-	}
-	m_graphics.Update(usDeltaTime, m_input);
+	if (m_input.IsKeyDown(VK_ESCAPE)) { return UpdateResult::Exit; }
+	m_scene.Update(usDeltaTime, m_input);
 	return UpdateResult::Continue;
+}
+
+void Game::Render()
+{
+	m_scene.Render();
 }
 
 bool Game::InitializeWindow(

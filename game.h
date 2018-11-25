@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #include "input.h"
-#include "graphics.h"
+#include "scene.h"
 #include "timer.h"
 
 class Game
@@ -15,10 +15,15 @@ public: // methods
 	void Run();
 
 private: // types
-	enum class UpdateResult { Exit, Continue };
+	enum class UpdateResult 
+	{ 
+		Exit, 
+		Continue 
+	};
 
 private: // methods
 	UpdateResult Update(int64_t usDeltaTime);
+	void Render();
 	bool InitializeWindow(uint32_t width, uint32_t height);
 	void ShutdownWindow();
 	LRESULT HandleMessage(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
@@ -29,7 +34,7 @@ private: // friends
 private: // members
 	Timer m_timer;
 	Input m_input;
-	Graphics m_graphics;
+	Scene m_scene;
 
 	HINSTANCE m_hInstance;
 	HWND m_hWindow;

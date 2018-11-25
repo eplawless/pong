@@ -12,6 +12,7 @@ class Paddle
 {
 public: // methods
 	Paddle(float positionX);
+	void Reset();
 	bool Initialize(ID3D11Device *pDevice);
 	void Shutdown();
 	void Update(uint64_t usdt, Input const &input);

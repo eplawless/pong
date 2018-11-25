@@ -98,7 +98,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="color-shader.cpp" />
     <ClCompile Include="d3d.cpp" />
-    <ClCompile Include="graphics.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
@@ -116,7 +116,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="color-shader.h" />
     <ClInclude Include="d3d.h" />
-    <ClInclude Include="graphics.h" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="paddle.h" />

@@ -11,12 +11,22 @@
 
 class Ball
 {
+public: // types
+	enum class UpdateResult
+	{
+		Moved,
+		HitWall,
+		HitPaddle,
+		HitLeftGoal,
+		HitRightGoal
+	};
+
 public: // methods
 	Ball();
 	void Reset();
 	bool Initialize(ID3D11Device *pDevice);
 	void Shutdown();
-	void Update(uint64_t usdt, Paddle const &leftPaddle, Paddle const &rightPaddle);
+	UpdateResult Update(uint64_t usdt, Paddle const &leftPaddle, Paddle const &rightPaddle);
 	void Render(
 		ID3D11DeviceContext *pDeviceContext,
 		TextureShader &shader,

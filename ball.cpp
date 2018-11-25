@@ -34,7 +34,7 @@ void Ball::Shutdown()
 	m_model.Shutdown();
 }
 
-void Ball::Update(
+Ball::UpdateResult Ball::Update(
 	uint64_t usdt, 
 	Paddle const &leftPaddle, 
 	Paddle const &rightPaddle)
@@ -48,7 +48,8 @@ void Ball::Update(
 	bool hitBottomWall = m_velocityY < 0 && m_bounds.positionY <= BOTTOM_WALL_POSITION_Y;
 	if (hitTopWall || hitBottomWall) 
 	{ 
-		m_velocityY = -m_velocityY; 
+		m_velocityY = -m_velocityY;
+		return UpdateResult::HitWall;
 	}
 
 	// hit paddles
@@ -61,8 +62,8 @@ void Ball::Update(
 		// reflect angle
 		Paddle const &paddle = hitLeftPaddle ? leftPaddle : rightPaddle;
 		Box2D paddleBounds = paddle.GetBounds();
-		float quarterPaddleHeight = paddleBounds.sizeY * 0.25f;
-		m_velocityY = 0.5f * (m_bounds.GetCenter().y - paddleBounds.GetCenter().y) / quarterPaddleHeight;
+		m_velocityY = (m_bounds.GetCenter().y - paddleBounds.GetCenter().y) / (paddleBounds.sizeY * 0.5f);
+		return UpdateResult::HitPaddle;
 	}
 
 	// hit goals
@@ -70,8 +71,12 @@ void Ball::Update(
 	bool hitLeftGoal = m_velocityX < 0 && m_bounds.positionX <= LEFT_GOAL_POSITION_X;
 	if (hitLeftGoal || hitRightGoal)
 	{
-		Reset();
+		return hitLeftGoal 
+			? UpdateResult::HitLeftGoal 
+			: UpdateResult::HitRightGoal;
 	}
+
+	return UpdateResult::Moved;
 }
 
 void Ball::Render(

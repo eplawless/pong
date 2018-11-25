@@ -30,9 +30,6 @@
     <ClCompile Include="timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="d3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,6 +60,9 @@
     <ClCompile Include="ball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system.h">
@@ -75,9 +75,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="d3d.h">
@@ -108,6 +105,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ball.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
