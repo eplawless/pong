@@ -6,11 +6,9 @@ Scene::Scene()
 {
 }
 
-bool Scene::Initialize(uint32_t screenWidth, uint32_t screenHeight, HWND hwnd)
+bool Scene::Initialize(HWND hwnd, D3D &d3d)
 {
-	m_d3d.Initialize(screenWidth, screenHeight, true, hwnd, false, SCREEN_DEPTH, SCREEN_NEAR);
-
-	ID3D11Device *pDevice = m_d3d.GetDevice();
+	ID3D11Device *pDevice = d3d.GetDevice();
 
 	m_camera.SetPosition(0.0f, 0.0f, -10.0f);
 
@@ -37,7 +35,6 @@ void Scene::Shutdown()
 	m_ball.Shutdown();
 	m_playerPaddle.Shutdown();
 	m_computerPaddle.Shutdown();
-	m_d3d.Shutdown();
 }
 
 void Scene::Reset()
@@ -54,27 +51,22 @@ void Scene::Update(
 	m_camera.Update();
 	m_playerPaddle.Update(usDeltaTime, input);
 	m_computerPaddle.Update(usDeltaTime, input);
-	switch (m_ball.Update(usDeltaTime, m_playerPaddle, m_computerPaddle))
+	Ball::UpdateResult result = m_ball.Update(usDeltaTime, m_playerPaddle, m_computerPaddle);
+	if (   result == Ball::UpdateResult::HitLeftGoal 
+		|| result == Ball::UpdateResult::HitRightGoal)
 	{
-	case Ball::UpdateResult::HitLeftGoal: // passthrough
-	case Ball::UpdateResult::HitRightGoal:
 		Reset();
-		break;
-	default:
-		break;
 	}
 }
 
-void Scene::Render()
+void Scene::Render(D3D &d3d)
 {
+	DirectX::XMMATRIX objectToWorld = d3d.GetWorldMatrix();
 	DirectX::XMMATRIX worldToView = m_camera.GetViewMatrix();
-	DirectX::XMMATRIX objectToWorld = m_d3d.GetWorldMatrix();
-	DirectX::XMMATRIX viewToClip = m_d3d.GetProjectionMatrix();
-	ID3D11DeviceContext *pDeviceContext = m_d3d.GetDeviceContext();
+	DirectX::XMMATRIX viewToClip = d3d.GetProjectionMatrix();
+	ID3D11DeviceContext *pDeviceContext = d3d.GetDeviceContext();
 
-	m_d3d.BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
 	m_playerPaddle.Render(pDeviceContext, m_shader, objectToWorld, worldToView, viewToClip);
 	m_computerPaddle.Render(pDeviceContext, m_shader, objectToWorld, worldToView, viewToClip);
 	m_ball.Render(pDeviceContext, m_shader, objectToWorld, worldToView, viewToClip);
-	m_d3d.EndScene();
 }

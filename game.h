@@ -2,9 +2,16 @@
 #include <Windows.h>
 #include <cstdint>
 
+#include "d3d.h"
 #include "input.h"
 #include "scene.h"
 #include "timer.h"
+#include "debug-overlay.h"
+
+const bool FULLSCREEN_ENABLED = false;
+const bool VSYNC_ENABLED = true;
+const float SCREEN_DEPTH = 1000.0f;
+const float SCREEN_NEAR = 0.1f;
 
 class Game
 {
@@ -32,9 +39,11 @@ private: // friends
 	friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 
 private: // members
+	D3D m_d3d;
 	Timer m_timer;
 	Input m_input;
 	Scene m_scene;
+	DebugOverlay m_debugOverlay;
 
 	HINSTANCE m_hInstance;
 	HWND m_hWindow;

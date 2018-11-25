@@ -23,7 +23,7 @@ Game::~Game()
 void Game::Run()
 {
 	m_input.Reset();
-	m_scene.Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, m_hWindow);
+	m_scene.Initialize(m_hWindow, m_d3d);
 
 	m_timer.Start();
 	int64_t usLastFrameStartTime = m_timer.GetElapsedMicroseconds();
@@ -59,14 +59,25 @@ void Game::Run()
 
 Game::UpdateResult Game::Update(int64_t usDeltaTime)
 {
-	if (m_input.IsKeyDown(VK_ESCAPE)) { return UpdateResult::Exit; }
+	if (m_input.IsKeyDown(VK_F1))
+	{
+		m_debugOverlay.SetVisible(!m_debugOverlay.IsVisible());
+		m_input.SetKeyUp(VK_F1);
+	}
+	if (m_input.IsKeyDown(VK_ESCAPE)) 
+	{ 
+		return UpdateResult::Exit; 
+	}
 	m_scene.Update(usDeltaTime, m_input);
 	return UpdateResult::Continue;
 }
 
 void Game::Render()
 {
-	m_scene.Render();
+	m_d3d.BeginScene(0.3f, 0.3f, 0.3f, 1.0f);
+	m_scene.Render(m_d3d);
+	m_debugOverlay.Render();
+	m_d3d.EndScene();
 }
 
 bool Game::InitializeWindow(
@@ -112,13 +123,18 @@ bool Game::InitializeWindow(
 	ShowWindow(m_hWindow, SW_SHOW);
 	SetForegroundWindow(m_hWindow);
 	SetFocus(m_hWindow);
-	ShowCursor(false);
+	ShowCursor(true);
+
+	m_d3d.Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, true, m_hWindow, false, SCREEN_DEPTH, SCREEN_NEAR);
+	m_debugOverlay.Initialize(m_hWindow, m_d3d);
 
 	return true;
 }
 
 void Game::ShutdownWindow()
 {
+	m_d3d.Shutdown();
+	m_debugOverlay.Shutdown();
 	ShowCursor(true);
 	DestroyWindow(m_hWindow);
 	m_hWindow = nullptr;
@@ -132,6 +148,11 @@ LRESULT Game::HandleMessage(
 	WPARAM wparam, 
 	LPARAM lparam)
 {
+	if (m_debugOverlay.HandleMessage(hwnd, message, wparam, lparam))
+	{
+		return true;
+	}
+
 	switch (message)
 	{
 	case WM_KEYDOWN:

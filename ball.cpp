@@ -71,9 +71,7 @@ Ball::UpdateResult Ball::Update(
 	bool hitLeftGoal = m_velocityX < 0 && m_bounds.positionX <= LEFT_GOAL_POSITION_X;
 	if (hitLeftGoal || hitRightGoal)
 	{
-		return hitLeftGoal 
-			? UpdateResult::HitLeftGoal 
-			: UpdateResult::HitRightGoal;
+		return hitLeftGoal ? UpdateResult::HitLeftGoal : UpdateResult::HitRightGoal;
 	}
 
 	return UpdateResult::Moved;

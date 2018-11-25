@@ -9,23 +9,17 @@
 #include "color-shader.h"
 #include "texture-shader.h"
 
-const bool FULLSCREEN_ENABLED = false;
-const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.1f;
-
 class Scene
 {
 public: // methods
 	Scene();
-	bool Initialize(uint32_t screenWidth, uint32_t screenHeight, HWND hwnd);
+	bool Initialize(HWND hwnd, D3D &d3d);
 	void Shutdown();
 	void Reset();
 	void Update(int64_t usDeltaTime, Input const &input);
-	void Render();
+	void Render(D3D &d3d);
 
 private: // members
-	D3D m_d3d;
 	TextureShader m_shader;
 	Camera m_camera;
 	Paddle m_playerPaddle;
