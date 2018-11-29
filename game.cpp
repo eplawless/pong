@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <cassert>
+
 static Game *s_pGame = nullptr;
 
 static const uint32_t WINDOW_WIDTH = 800;
@@ -9,7 +11,9 @@ Game::Game(
 	LPCWSTR applicationName)
 	: m_hInstance(nullptr)
 	, m_applicationName(applicationName)
+	, m_inputMapper(InputMapper::LoadConfigFromFile("input.cfg"))
 {
+	assert(s_pGame == nullptr);
 	s_pGame = this;
 	InitializeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
@@ -23,7 +27,7 @@ Game::~Game()
 void Game::Run()
 {
 	m_input.Reset();
-	m_scene.Initialize(m_hWindow, m_d3d);
+	m_scene.Initialize(m_d3d);
 
 	m_timer.Start();
 	int64_t usLastFrameStartTime = m_timer.GetElapsedMicroseconds();
@@ -38,18 +42,16 @@ void Game::Run()
 			DispatchMessage(&msg);
 		}
 
-		if (msg.message == WM_QUIT)
-		{
-			break;
-		}
+		if (msg.message == WM_QUIT) { break; }
+
+		Input::KeyEventList arrKeyEvents = m_input.GetAndClearKeyEvents();
+		GameEventList arrGameEvents = m_inputMapper.MapToPongEventList(arrKeyEvents);
+		if (HandleEvents(arrGameEvents) == LoopAction::Exit) { break; }
 
 		int64_t usFrameStartTime = m_timer.GetElapsedMicroseconds();
 		int64_t usDeltaTime = usFrameStartTime - usLastFrameStartTime;
 		usLastFrameStartTime = usFrameStartTime;
-		if (Update(usDeltaTime) == UpdateResult::Exit)
-		{
-			break;
-		}
+		Update(usDeltaTime);
 
 		Render();
 	}
@@ -57,22 +59,32 @@ void Game::Run()
 	m_scene.Shutdown();
 }
 
-Game::UpdateResult Game::Update(int64_t usDeltaTime)
+Game::LoopAction Game::HandleEvents(GameEventList const &arrGameEvents)
 {
-	if (m_input.IsKeyDown(VK_F1))
+	for (GameEvent const &event : arrGameEvents)
 	{
-		m_debugOverlay.SetVisible(!m_debugOverlay.IsVisible());
-		m_input.SetKeyUp(VK_F1);
-	}
-	if (m_input.IsKeyDown(VK_ESCAPE)) 
-	{ 
-		return UpdateResult::Exit; 
+		if (event == GameEvent::Quit) { return LoopAction::Exit; }
+		if (event == GameEvent::ToggleDebugOverlay) { ToggleDebugOverlay(); }
+		// TODO: pause here
 	}
 	if (!m_debugOverlay.GetOptions().isPaused)
 	{
-		m_scene.Update(usDeltaTime, m_input);
+		m_scene.HandleEvents(arrGameEvents);
 	}
-	return UpdateResult::Continue;
+	return LoopAction::Continue;
+}
+
+void Game::Update(int64_t usDeltaTime)
+{
+	if (!m_debugOverlay.GetOptions().isPaused)
+	{
+		m_scene.Update(usDeltaTime);
+	}
+}
+
+void Game::ToggleDebugOverlay()
+{
+	m_debugOverlay.SetVisible(!m_debugOverlay.IsVisible());
 }
 
 void Game::Render()

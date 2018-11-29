@@ -47,6 +47,8 @@ struct Point2D
 	float y;
 };
 
+using Vector2D = Point2D;
+
 struct Box2D
 {
 	float positionX;

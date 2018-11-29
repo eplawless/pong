@@ -4,6 +4,7 @@
 
 #include "d3d.h"
 #include "input.h"
+#include "input-mapper.h"
 #include "scene.h"
 #include "timer.h"
 #include "debug-overlay.h"
@@ -22,14 +23,12 @@ public: // methods
 	void Run();
 
 private: // types
-	enum class UpdateResult 
-	{ 
-		Exit, 
-		Continue 
-	};
+	enum class LoopAction { Exit, Continue };
 
 private: // methods
-	UpdateResult Update(int64_t usDeltaTime);
+	LoopAction HandleEvents(GameEventList const &arrGameEvents);
+	void Update(int64_t usDeltaTime);
+	void ToggleDebugOverlay();
 	void Render();
 	bool InitializeWindow(uint32_t width, uint32_t height);
 	void ShutdownWindow();
@@ -42,6 +41,7 @@ private: // members
 	D3D m_d3d;
 	Timer m_timer;
 	Input m_input;
+	InputMapper m_inputMapper;
 	Scene m_scene;
 	DebugOverlay m_debugOverlay;
 

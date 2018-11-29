@@ -1,8 +1,8 @@
 #pragma once
 
-#include <d3d11.h>
 #include <DirectXMath.h>
 
+#include "d3d.h"
 #include "input.h"
 #include "model.h"
 #include "paddle.h"
@@ -11,29 +11,22 @@
 
 class Ball
 {
-public: // types
-	enum class UpdateResult
-	{
-		Moved,
-		HitWall,
-		HitPaddle,
-		HitLeftGoal,
-		HitRightGoal
-	};
-
 public: // methods
 	Ball();
 	void Reset();
-	bool Initialize(ID3D11Device *pDevice);
+	bool Initialize(D3D &d3d);
 	void Shutdown();
-	UpdateResult Update(uint64_t usdt, Paddle const &leftPaddle, Paddle const &rightPaddle);
+	void HandleEvents(GameEventList const &arrEvents);
+	void Update(uint64_t usdt);
 	void Render(
-		ID3D11DeviceContext *pDeviceContext,
+		D3D &d3d,
 		TextureShader &shader,
 		DirectX::XMMATRIX objectToWorld,
 		DirectX::XMMATRIX worldToView,
 		DirectX::XMMATRIX viewToClip);
 
+	Vector2D GetVelocity() const;
+	void SetVelocity(Vector2D const &velocity);
 	Box2D const &GetBounds() const { return m_bounds; }
 
 private: // members

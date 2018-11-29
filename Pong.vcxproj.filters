@@ -87,6 +87,12 @@
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="input-mapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system.h">
@@ -161,6 +167,15 @@
     <ClInclude Include="imgui\imgui_impl_dx11.h">
       <Filter>Source Files\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="pong-event.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="input-mapper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobject.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="color-ps.hlsl">
@@ -175,6 +190,9 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="texture-vs.hlsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="input.cfg">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

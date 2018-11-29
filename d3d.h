@@ -31,6 +31,8 @@ public: // methods
 	void BeginScene(float red, float green, float blue, float alpha);
 	void EndScene();
 
+	HWND GetWindowHandle() { return m_hWindow; }
+
 	ID3D11Device *GetDevice() { return m_pDevice.Get(); }
 	ID3D11DeviceContext *GetDeviceContext() { return m_pDeviceContext.Get(); }
 
@@ -93,6 +95,7 @@ private: // static members
 	static const size_t VIDEO_CARD_DESCRIPTION_MAX_LENGTH = 128;
 
 private: // members
+	HWND m_hWindow;
 	bool m_vsyncEnabled;
 	bool m_isFullscreen;
 	uint32_t m_videoCardMemoryInMB;

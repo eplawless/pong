@@ -1,6 +1,7 @@
 #pragma once
 
 #include <DirectXMath.h>
+#include "pong-event.h"
 
 class Camera
 {
@@ -13,6 +14,8 @@ public: // methods
 	DirectX::XMFLOAT3 GetPosition();
 	DirectX::XMFLOAT3 GetRotation();
 	DirectX::XMMATRIX GetViewMatrix() { return m_worldToView; }
+
+	void HandleEvents(GameEventList const &arrEvents);
 	void Update();
 
 private: // members

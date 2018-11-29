@@ -8,7 +8,8 @@
 static const uint32_t BYTES_PER_MEGABYTE = 1024 * 1024;
 
 D3D::D3D()
-	: m_vsyncEnabled(false)
+	: m_hWindow(nullptr)
+	, m_vsyncEnabled(false)
 	, m_isFullscreen(false)
 	, m_videoCardMemoryInMB(0)
 	, m_pSwapChain(nullptr)
@@ -32,6 +33,7 @@ bool D3D::Initialize(
 	float screenDepth, 
 	float screenNear)
 {
+	m_hWindow = hwnd;
 	m_vsyncEnabled = vsyncEnabled;
 	m_isFullscreen = isFullscreen;
 

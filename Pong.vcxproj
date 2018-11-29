@@ -99,12 +99,14 @@
     <ClCompile Include="color-shader.cpp" />
     <ClCompile Include="d3d.cpp" />
     <ClCompile Include="debug-overlay.cpp" />
+    <ClCompile Include="gameobject.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="input-mapper.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
@@ -124,6 +126,9 @@
     <ClInclude Include="color-shader.h" />
     <ClInclude Include="d3d.h" />
     <ClInclude Include="debug-overlay.h" />
+    <ClInclude Include="gameobject.h" />
+    <ClInclude Include="input-mapper.h" />
+    <ClInclude Include="pong-event.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
@@ -159,6 +164,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="input.cfg" />
     <None Include="texture-ps.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
