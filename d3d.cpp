@@ -288,7 +288,7 @@ bool D3D::InitializeSwapChainAndDevice(
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
 
-	D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_1;
+	D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	HRESULT deviceAndSwapChainOk = D3D11CreateDeviceAndSwapChain(
 		nullptr,
