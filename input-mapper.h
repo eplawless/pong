@@ -11,8 +11,8 @@ class InputMapper
 {
 public: // methods
 	static InputMapper LoadConfigFromFile(char const *filename);
-	GameEvent MapToPongEvent(Input::KeyEvent const &keyEvent) const;
-	GameEventList MapToPongEventList(Input::KeyEventList const &arrKeyEvents) const;
+	GameEvent MapToGameEvent(Input::KeyEvent const &keyEvent) const;
+	GameEventList MapToGameEventList(Input::KeyEventList const &arrKeyEvents) const;
 
 private: // methods
 	InputMapper() = default;

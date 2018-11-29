@@ -179,7 +179,7 @@ InputMapper InputMapper::LoadConfigFromFile(
 	return result;
 }
 
-GameEvent InputMapper::MapToPongEvent(Input::KeyEvent const &keyEvent) const
+GameEvent InputMapper::MapToGameEvent(Input::KeyEvent const &keyEvent) const
 {
 	auto it = m_keyToMappedEvents.find(keyEvent.key);
 	if (it == m_keyToMappedEvents.end())
@@ -190,12 +190,12 @@ GameEvent InputMapper::MapToPongEvent(Input::KeyEvent const &keyEvent) const
 	return keyEvent.type == Input::KeyEvent::KeyUp ? events.onKeyUp : events.onKeyDown;
 }
 
-GameEventList InputMapper::MapToPongEventList(Input::KeyEventList const &arrKeyEvents) const
+GameEventList InputMapper::MapToGameEventList(Input::KeyEventList const &arrKeyEvents) const
 {
 	GameEventList result;
 	for (Input::KeyEvent const &keyEvent : arrKeyEvents)
 	{
-		GameEvent event = MapToPongEvent(keyEvent);
+		GameEvent event = MapToGameEvent(keyEvent);
 		if (event != GameEvent::None) { result.push_back(event); }
 	}
 	return result;

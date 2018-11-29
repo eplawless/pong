@@ -66,10 +66,7 @@ void Scene::Update(int64_t usDeltaTime)
 	m_ball.Update(usDeltaTime);
 
 	if (CollideBallWithPaddles()) { return; }
-	if (CollideBallWithGoals())
-	{
-		Reset();
-	}
+	if (CollideBallWithGoals()) { Reset(); }
 }
 
 void Scene::Render(D3D &d3d)

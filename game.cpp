@@ -45,7 +45,7 @@ void Game::Run()
 		if (msg.message == WM_QUIT) { break; }
 
 		Input::KeyEventList arrKeyEvents = m_input.GetAndClearKeyEvents();
-		GameEventList arrGameEvents = m_inputMapper.MapToPongEventList(arrKeyEvents);
+		GameEventList arrGameEvents = m_inputMapper.MapToGameEventList(arrKeyEvents);
 		if (HandleEvents(arrGameEvents) == LoopAction::Exit) { break; }
 
 		int64_t usFrameStartTime = m_timer.GetElapsedMicroseconds();
