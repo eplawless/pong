@@ -158,7 +158,8 @@ InputMapper<GameEvent>::ParseAndAddConfigEntry(std::string const &line)
 // ----------------------
 
 template <typename GameEvent>
-std::regex InputMapper<GameEvent>::s_reConfigFileEntry(
+std::regex 
+InputMapper<GameEvent>::s_reConfigFileEntry(
 	"\\s*(\\w+)" // key name
 	"\\s+(\\w+)" // action
 	"\\s+(\\w+)" // event
@@ -168,7 +169,8 @@ std::regex InputMapper<GameEvent>::s_reConfigFileEntry(
 // TODO: allow entries like "0x37 keydown LeftPaddleMoveUp"
 // https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes
 template <typename GameEvent>
-std::unordered_map<std::string, uint32_t> const InputMapper<GameEvent>::s_keyNameToKey = {
+std::unordered_map<std::string, uint32_t> const 
+InputMapper<GameEvent>::s_keyNameToKey = {
 	{ "mouse1", 0x01 },
 	{ "mouse2", 0x02 },
 	{ "cancel", 0x03 },
@@ -300,7 +302,8 @@ std::unordered_map<std::string, uint32_t> const InputMapper<GameEvent>::s_keyNam
 };
 
 template <typename GameEvent>
-std::unordered_map<std::string, Input::KeyEvent::Type> InputMapper<GameEvent>::s_actionNameToAction = {
+std::unordered_map<std::string, Input::KeyEvent::Type> 
+InputMapper<GameEvent>::s_actionNameToAction = {
 	{ "keydown", Input::KeyEvent::KeyDown },
 	{ "keyup", Input::KeyEvent::KeyUp }
 };
