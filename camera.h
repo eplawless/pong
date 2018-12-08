@@ -15,7 +15,7 @@ public: // methods
 	DirectX::XMFLOAT3 GetRotation();
 	DirectX::XMMATRIX GetViewMatrix() { return m_worldToView; }
 
-	void HandleEvents(GameEventList const &arrEvents);
+	void HandleEvents(PongEventList const &arrEvents);
 	void Update();
 
 private: // members

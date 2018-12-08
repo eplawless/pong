@@ -16,7 +16,7 @@ public: // methods
 	void Reset();
 	bool Initialize(D3D &d3d);
 	void Shutdown();
-	void HandleEvents(GameEventList const &arrEvents);
+	void HandleEvents(PongEventList const &arrEvents);
 	void Update(uint64_t usdt);
 	void Render(
 		D3D &d3d,

@@ -14,7 +14,7 @@ public: // methods
 	bool Initialize(D3D &d3d);
 	void Shutdown();
 	virtual void Reset() = 0;
-	virtual void HandleEvents(GameEventList const &arrGameEvents) = 0;
+	virtual void HandleEvents(PongEventList const &arrGameEvents) = 0;
 	virtual void Update(uint64_t usdt) = 0;
 	virtual void Render() = 0;
 

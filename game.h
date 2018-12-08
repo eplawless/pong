@@ -8,6 +8,7 @@
 #include "scene.h"
 #include "timer.h"
 #include "debug-overlay.h"
+#include "pong-event.h"
 
 const bool FULLSCREEN_ENABLED = false;
 const bool VSYNC_ENABLED = true;
@@ -26,7 +27,7 @@ private: // types
 	enum class LoopAction { Exit, Continue };
 
 private: // methods
-	LoopAction HandleEvents(GameEventList const &arrGameEvents);
+	LoopAction HandleEvents(PongEventList const &arrGameEvents);
 	void Update(int64_t usDeltaTime);
 	void ToggleDebugOverlay();
 	void Render();
@@ -41,7 +42,7 @@ private: // members
 	D3D m_d3d;
 	Timer m_timer;
 	Input m_input;
-	InputMapper m_inputMapper;
+	InputMapper<PongEvent> m_inputMapper;
 	Scene m_scene;
 	DebugOverlay m_debugOverlay;
 

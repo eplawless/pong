@@ -30,7 +30,7 @@ void Ball::Shutdown()
 	m_model.Shutdown();
 }
 
-void Ball::HandleEvents(GameEventList const &arrEvents)
+void Ball::HandleEvents(PongEventList const &arrEvents)
 {
 }
 

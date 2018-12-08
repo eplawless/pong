@@ -34,7 +34,7 @@ DirectX::XMFLOAT3 Camera::GetRotation()
 	return DirectX::XMFLOAT3{ m_rotationX, m_rotationY, m_rotationZ };
 }
 
-void Camera::HandleEvents(GameEventList const &arrEvents)
+void Camera::HandleEvents(PongEventList const &arrEvents)
 {
 }
 

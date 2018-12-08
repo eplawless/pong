@@ -32,16 +32,16 @@ void Paddle::Shutdown()
 	m_model.Shutdown();
 }
 
-void Paddle::HandleEvents(GameEventList const &arrEvents)
+void Paddle::HandleEvents(PongEventList const &arrEvents)
 {
-	for (GameEvent const &event : arrEvents)
+	for (PongEvent const &event : arrEvents)
 	{
-		if (m_side == Side::Left && event == GameEvent::LeftPaddleMoveUp) { m_moveState = Up; }
-		if (m_side == Side::Left && event == GameEvent::LeftPaddleMoveDown) { m_moveState = Down; }
-		if (m_side == Side::Left && event == GameEvent::LeftPaddleStop) { m_moveState = Stopped; }
-		if (m_side == Side::Right && event == GameEvent::RightPaddleMoveUp) { m_moveState = Up; }
-		if (m_side == Side::Right && event == GameEvent::RightPaddleMoveDown) { m_moveState = Down; }
-		if (m_side == Side::Right && event == GameEvent::RightPaddleStop) { m_moveState = Stopped; }
+		if (m_side == Side::Left && event == PongEvent::LeftPaddleMoveUp) { m_moveState = Up; }
+		if (m_side == Side::Left && event == PongEvent::LeftPaddleMoveDown) { m_moveState = Down; }
+		if (m_side == Side::Left && event == PongEvent::LeftPaddleStop) { m_moveState = Stopped; }
+		if (m_side == Side::Right && event == PongEvent::RightPaddleMoveUp) { m_moveState = Up; }
+		if (m_side == Side::Right && event == PongEvent::RightPaddleMoveDown) { m_moveState = Down; }
+		if (m_side == Side::Right && event == PongEvent::RightPaddleStop) { m_moveState = Stopped; }
 	}
 }
 

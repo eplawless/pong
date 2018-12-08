@@ -2,7 +2,7 @@
 
 #include <vector>
 
-enum class GameEvent
+enum class PongEvent
 {
 	None,
 	LeftPaddleMoveUp,
@@ -16,4 +16,4 @@ enum class GameEvent
 	ToggleDebugOverlay
 };
 
-using GameEventList = std::vector<GameEvent>;
+using PongEventList = std::vector<PongEvent>;

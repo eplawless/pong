@@ -51,7 +51,7 @@ void Scene::Reset()
 	m_ball.Reset();
 }
 
-void Scene::HandleEvents(GameEventList const &arrEvents)
+void Scene::HandleEvents(PongEventList const &arrEvents)
 {
 	m_leftPaddle.HandleEvents(arrEvents);
 	m_rightPaddle.HandleEvents(arrEvents);

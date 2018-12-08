@@ -7,11 +7,25 @@ static Game *s_pGame = nullptr;
 static const uint32_t WINDOW_WIDTH = 800;
 static const uint32_t WINDOW_HEIGHT = 600;
 
+static InputMapper<PongEvent>::EventNameToGameEventMap s_eventNameToEvent = {
+	{ "None", PongEvent::None },
+	{ "LeftPaddleMoveUp", PongEvent::LeftPaddleMoveUp },
+	{ "LeftPaddleMoveDown", PongEvent::LeftPaddleMoveDown },
+	{ "LeftPaddleStop", PongEvent::LeftPaddleStop },
+	{ "RightPaddleMoveUp", PongEvent::RightPaddleMoveUp },
+	{ "RightPaddleMoveDown", PongEvent::RightPaddleMoveDown },
+	{ "RightPaddleStop", PongEvent::RightPaddleStop },
+	{ "Pause", PongEvent::Pause },
+	{ "Quit", PongEvent::Quit },
+	{ "ToggleDebugOverlay", PongEvent::ToggleDebugOverlay }
+};
+
 Game::Game(
 	LPCWSTR applicationName)
 	: m_hInstance(nullptr)
 	, m_applicationName(applicationName)
-	, m_inputMapper(InputMapper::LoadConfigFromFile("input.cfg"))
+	, m_inputMapper(
+		InputMapper<PongEvent>::LoadConfigFromFile("input.cfg", s_eventNameToEvent))
 {
 	assert(s_pGame == nullptr);
 	s_pGame = this;
@@ -45,7 +59,7 @@ void Game::Run()
 		if (msg.message == WM_QUIT) { break; }
 
 		Input::KeyEventList arrKeyEvents = m_input.GetAndClearKeyEvents();
-		GameEventList arrGameEvents = m_inputMapper.MapToGameEventList(arrKeyEvents);
+		PongEventList arrGameEvents = m_inputMapper.MapToGameEventList(arrKeyEvents);
 		if (HandleEvents(arrGameEvents) == LoopAction::Exit) { break; }
 
 		int64_t usFrameStartTime = m_timer.GetElapsedMicroseconds();
@@ -59,12 +73,12 @@ void Game::Run()
 	m_scene.Shutdown();
 }
 
-Game::LoopAction Game::HandleEvents(GameEventList const &arrGameEvents)
+Game::LoopAction Game::HandleEvents(PongEventList const &arrGameEvents)
 {
-	for (GameEvent const &event : arrGameEvents)
+	for (PongEvent const &event : arrGameEvents)
 	{
-		if (event == GameEvent::Quit) { return LoopAction::Exit; }
-		if (event == GameEvent::ToggleDebugOverlay) { ToggleDebugOverlay(); }
+		if (event == PongEvent::Quit) { return LoopAction::Exit; }
+		if (event == PongEvent::ToggleDebugOverlay) { ToggleDebugOverlay(); }
 		// TODO: pause here
 	}
 	if (!m_debugOverlay.GetOptions().isPaused)
