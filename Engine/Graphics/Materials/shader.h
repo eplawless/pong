@@ -15,12 +15,12 @@ protected: // methods
 	void OutputShaderErrorMessage(
 		ID3D10Blob *pErrorMessage,
 		HWND hwnd,
-		TCHAR *shaderFilename);
+		WCHAR *shaderFilename);
 
 	bool InitializeVertexShader(
 		ID3D11Device *pDevice,
 		HWND hwnd,
-		TCHAR *filename,
+		WCHAR *filename,
 		CHAR *entryPoint,
 		ID3D11VertexShader **out_pVertexShader,
 		std::function<bool(ID3D10Blob*)> postProcessAction);
@@ -28,7 +28,7 @@ protected: // methods
 	bool InitializePixelShader(
 		ID3D11Device *pDevice,
 		HWND hwnd,
-		TCHAR *filename,
+		WCHAR *filename,
 		CHAR *entryPoint,
 		ID3D11PixelShader **out_pPixelShader);
 

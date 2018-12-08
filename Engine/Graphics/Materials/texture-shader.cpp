@@ -4,8 +4,8 @@ bool TextureShader::Initialize(
 	ID3D11Device *pDevice, 
 	HWND hwnd)
 {
-	TCHAR *vsFilename = TEXT("../Pong/texture-vs.hlsl");
-	TCHAR *psFilename = TEXT("../Pong/texture-ps.hlsl");
+	TCHAR *vsFilename = TEXT("Engine/Graphics/Materials/texture-vs.hlsl");
+	TCHAR *psFilename = TEXT("Engine/Graphics/Materials/texture-ps.hlsl");
 	if (!InitializeShader(pDevice, hwnd, vsFilename, psFilename))
 	{
 		return false;

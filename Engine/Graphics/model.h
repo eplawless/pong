@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 
 #include "texture.h"
-#include "utility.h"
+#include "../utility.h"
 
 class Model
 {

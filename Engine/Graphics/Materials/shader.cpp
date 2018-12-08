@@ -1,8 +1,9 @@
 #include "shader.h"
-#include "utility.h"
+#include "../../utility.h"
 
 #include <fstream>
 #include <d3dcompiler.h>
+#include <cstdlib>
 
 Shader::Shader()
 {
@@ -15,7 +16,7 @@ Shader::~Shader()
 void Shader::OutputShaderErrorMessage(
 	ID3D10Blob *pErrorMessage, 
 	HWND hwnd, 
-	TCHAR *shaderFilename)
+	WCHAR *shaderFilename)
 {
 	const char *compileErrors = static_cast<const char *>(pErrorMessage->GetBufferPointer());
 	size_t bufferSize = pErrorMessage->GetBufferSize();
@@ -24,7 +25,7 @@ void Shader::OutputShaderErrorMessage(
 	fout.open("shader-error.log");
 	fout.write(compileErrors, bufferSize);
 	fout.close();
-
+	
 	MessageBox(
 		hwnd,
 		TEXT("Error compiling shader. Check shader-error.log for details."),
@@ -36,7 +37,7 @@ void Shader::OutputShaderErrorMessage(
 bool Shader::InitializeVertexShader(
 	ID3D11Device *pDevice,
 	HWND hwnd,
-	TCHAR *filename,
+	WCHAR *filename,
 	CHAR *entryPoint,
 	ID3D11VertexShader **out_pVertexShader,
 	std::function<bool(ID3D10Blob*)> postProcessAction)
@@ -87,7 +88,7 @@ bool Shader::InitializeVertexShader(
 bool Shader::InitializePixelShader(
 	ID3D11Device *pDevice, 
 	HWND hwnd, 
-	TCHAR *filename, 
+	WCHAR *filename, 
 	CHAR *entryPoint, 
 	ID3D11PixelShader **out_pPixelShader)
 {

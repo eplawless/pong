@@ -1,5 +1,5 @@
 #include "color-shader.h"
-#include "utility.h"
+#include "../../utility.h"
 
 #include <d3dcompiler.h>
 #include <fstream>
@@ -8,8 +8,8 @@ bool ColorShader::Initialize(
 	ID3D11Device *pDevice, 
 	HWND hwnd)
 {
-	TCHAR *vsFilename = TEXT("../Pong/color-vs.hlsl");
-	TCHAR *psFilename = TEXT("../Pong/color-ps.hlsl");
+	WCHAR *vsFilename = L"Engine/Graphics/Materials/color-vs.hlsl";
+	WCHAR *psFilename = L"Engine/Graphics/Materials/color-ps.hlsl";
 	return InitializeShader(pDevice, hwnd, vsFilename, psFilename);
 }
 
@@ -37,8 +37,8 @@ bool ColorShader::Render(
 bool ColorShader::InitializeShader(
 	ID3D11Device *pDevice, 
 	HWND hwnd, 
-	TCHAR *vsFilename,
-	TCHAR *psFilename)
+	WCHAR *vsFilename,
+	WCHAR *psFilename)
 {
 	auto onVertexShaderInitialized = [&](ID3D10Blob *pVertexShaderBuffer) -> bool 
 	{

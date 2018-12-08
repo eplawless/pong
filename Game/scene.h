@@ -1,13 +1,14 @@
 #pragma once
 #include <cstdint>
 
-#include "d3d.h"
-#include "camera.h"
+#include "../Engine/Graphics/Drivers/d3d.h"
+#include "../Engine/Graphics/camera.h"
+#include "../Engine/Graphics/Materials/color-shader.h"
+#include "../Engine/Graphics/Materials/texture-shader.h"
+
 #include "paddle.h"
 #include "ball.h"
 #include "pong-event.h"
-#include "color-shader.h"
-#include "texture-shader.h"
 
 class Scene
 {

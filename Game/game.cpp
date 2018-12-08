@@ -25,7 +25,7 @@ Game::Game(
 	: m_hInstance(nullptr)
 	, m_applicationName(applicationName)
 	, m_inputMapper(
-		InputMapper<PongEvent>::LoadConfigFromFile("input.cfg", s_eventNameToEvent))
+		InputMapper<PongEvent>::LoadConfigFromFile("Config/input.cfg", s_eventNameToEvent))
 {
 	assert(s_pGame == nullptr);
 	s_pGame = this;

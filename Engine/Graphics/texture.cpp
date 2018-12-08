@@ -1,10 +1,10 @@
 #include "texture.h"
 
-#include <WICTextureLoader.h>
+#include "../Libraries/DirectXTK/Include/WICTextureLoader.h"
 
 bool Texture::Initialize(
 	ID3D11Device *pDevice, 
-	TCHAR *filename)
+	WCHAR *filename)
 {
 	HRESULT textureOk = DirectX::CreateWICTextureFromFile(
 		pDevice,

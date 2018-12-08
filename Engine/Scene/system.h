@@ -1,6 +1,6 @@
 #pragma once
 
-#include "input.h"
+#include "../Core/input.h"
 #include <cstdint>
 
 class System

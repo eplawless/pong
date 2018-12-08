@@ -2,12 +2,11 @@
 
 #include <cstdint>
 
-#include "d3d.h"
 #include "pong-event.h"
-#include "model.h"
-#include "utility.h"
-#include "texture-shader.h"
-#include "gameobject.h"
+#include "../Engine/Graphics/Drivers/d3d.h"
+#include "../Engine/Graphics/model.h"
+#include "../Engine/utility.h"
+#include "../Engine/Graphics/Materials/texture-shader.h"
 
 class Paddle
 {

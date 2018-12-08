@@ -10,7 +10,7 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
-#include "utility.h"
+#include "../../utility.h"
 
 class D3D
 {

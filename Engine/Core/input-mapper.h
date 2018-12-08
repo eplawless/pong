@@ -8,7 +8,7 @@
 #include <regex>
 
 #include "input.h"
-#include "optional.hpp"
+#include "../Libraries/nonstd/optional.hpp"
 
 template <typename GameEvent>
 class InputMapper

@@ -2,12 +2,12 @@
 
 #include <d3d11.h>
 
-#include "utility.h"
+#include "../utility.h"
 
 class Texture
 {
 public: // methods
-	bool Initialize(ID3D11Device *pDevice, TCHAR *filename);
+	bool Initialize(ID3D11Device *pDevice, WCHAR *filename);
 	void Shutdown();
 
 	ID3D11ShaderResourceView *GetTexture() { return m_pShaderResourceView.Get(); }

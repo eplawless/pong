@@ -2,11 +2,12 @@
 #include <Windows.h>
 #include <cstdint>
 
-#include "d3d.h"
-#include "input.h"
-#include "input-mapper.h"
+#include "../Engine/Graphics/Drivers/d3d.h"
+#include "../Engine/Core/input.h"
+#include "../Engine/Core/input-mapper.h"
+#include "../Engine/Core/timer.h"
+
 #include "scene.h"
-#include "timer.h"
 #include "debug-overlay.h"
 #include "pong-event.h"
 

@@ -3,11 +3,11 @@
 #include <DirectXMath.h>
 
 #include "d3d.h"
-#include "input.h"
-#include "model.h"
+#include "../Engine/Core/input.h"
+#include "../Engine/Graphics/model.h"
 #include "paddle.h"
-#include "utility.h"
-#include "texture-shader.h"
+#include "../Engine/utility.h"
+#include "../Engine/Graphics/Materials/texture-shader.h"
 
 class Ball
 {

@@ -12,7 +12,7 @@ Model::Model()
 bool Model::Initialize(
 	ID3D11Device *pDevice)
 {
-	TCHAR *textureFilename = TEXT("../Pong/Textures/example.gif");
+	TCHAR *textureFilename = TEXT("Assets/Textures/example.gif");
 	if (!m_texture.Initialize(pDevice, textureFilename))
 	{
 		return false;
