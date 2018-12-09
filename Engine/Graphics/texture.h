@@ -7,7 +7,7 @@
 class Texture
 {
 public: // methods
-	bool Initialize(ID3D11Device *pDevice, WCHAR *filename);
+	bool Initialize(ID3D11Device *pDevice, WCHAR const *filename);
 	void Shutdown();
 
 	ID3D11ShaderResourceView *GetTexture() { return m_pShaderResourceView.Get(); }

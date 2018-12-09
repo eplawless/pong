@@ -81,6 +81,16 @@ void Win32Window::PumpMessages()
 	}
 }
 
+void Win32Window::ShowMessageBox(std::string const &title, std::string const &message)
+{
+	MessageBoxA(m_hWindow, title.c_str(), message.c_str(), MB_OK);
+}
+
+void Win32Window::ShowMessageBox(std::wstring const &title, std::wstring const &message)
+{
+	MessageBox(m_hWindow, title.c_str(), message.c_str(), MB_OK);
+}
+
 LRESULT Win32Window::HandleMessage(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	switch (message)

@@ -18,12 +18,11 @@ static InputMapper<PongEvent>::EventNameToGameEventMap s_eventNameToEvent = {
 	{ "ToggleDebugOverlay", PongEvent::ToggleDebugOverlay }
 };
 
-Game::Game(Window *pWindow, HWND hwnd)
+Game::Game(Window &window, Renderer &renderer)
 	: m_inputMapper(InputMapper<PongEvent>::LoadConfigFromFile("Config/input.cfg", s_eventNameToEvent))
-	, m_pWindow(pWindow)
-	, m_hWindow(hwnd)
+	, m_window(window)
+	, m_renderer(renderer)
 {
-	assert(m_pWindow != nullptr);
 	Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
@@ -34,23 +33,23 @@ Game::~Game()
 
 void Game::Run()
 {
-	m_pWindow->Show();
-	m_pWindow->GetInput().Reset();
-	m_scene.Initialize(m_d3d);
-
-	m_timer.Start();
-	int64_t usLastFrameStartTime = m_timer.GetElapsedMicroseconds();
+	m_window.Show();
+	m_window.GetInput().Reset();
+	m_scene.Initialize(m_window, m_renderer);
 
 	bool shouldKeepRunning = true;
 	Window::EventListenerHandle quitListenerHandle = 
-		m_pWindow->AddQuitEventListener([&](int) { shouldKeepRunning = false; });
+		m_window.AddQuitEventListener([&](int) { shouldKeepRunning = false; });
+
+	m_timer.Start();
+	int64_t usLastFrameStartTime = m_timer.GetElapsedMicroseconds();
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
 	while (shouldKeepRunning)
 	{
-		m_pWindow->PumpMessages();
-		Input::KeyEventList arrKeyEvents = m_pWindow->GetInput().GetAndClearKeyEvents();
+		m_window.PumpMessages();
+		Input::KeyEventList arrKeyEvents = m_window.GetInput().GetAndClearKeyEvents();
 		PongEventList arrGameEvents = m_inputMapper.MapToGameEventList(arrKeyEvents);
 		if (HandleEvents(arrGameEvents) == LoopAction::Exit) { break; }
 
@@ -58,14 +57,13 @@ void Game::Run()
 		int64_t usDeltaTime = usFrameStartTime - usLastFrameStartTime;
 		usLastFrameStartTime = usFrameStartTime;
 		Update(usDeltaTime);
-
 		Render();
 	}
 
-	// TODO: exception safety?
-	m_pWindow->RemoveEventListener(quitListenerHandle);
-
+	// TODO: exception safety
+	m_window.RemoveEventListener(quitListenerHandle);
 	m_scene.Shutdown();
+	m_window.Hide();
 }
 
 Game::LoopAction Game::HandleEvents(PongEventList const &arrGameEvents)
@@ -98,24 +96,23 @@ void Game::ToggleDebugOverlay()
 
 void Game::Render()
 {
-	m_d3d.BeginScene(0.3f, 0.3f, 0.3f, 1.0f);
-	m_scene.Render(m_d3d);
+	m_renderer.BeginScene(0.3f, 0.3f, 0.3f, 1.0f);
+	m_scene.Render(m_renderer);
 	m_debugOverlay.Render();
-	m_d3d.EndScene();
+	m_renderer.EndScene();
 }
 
 bool Game::Initialize(
 	uint32_t windowWidth, 
 	uint32_t windowHeight)
 {
-	m_d3d.Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, true, m_hWindow, false, SCREEN_DEPTH, SCREEN_NEAR);
-	m_debugOverlay.Initialize(m_hWindow, m_d3d);
-
+	m_renderer.Initialize(true, false, SCREEN_DEPTH, SCREEN_NEAR);
+	//m_debugOverlay.Initialize(m_hWindow, m_d3d);
 	return true;
 }
 
 void Game::ShutdownWindow()
 {
-	m_d3d.Shutdown();
-	m_debugOverlay.Shutdown();
+	//m_debugOverlay.Shutdown();
+	m_renderer.Shutdown();
 }

@@ -3,14 +3,6 @@
 static uint32_t g_nextEventListenerHandleId = 1;
 
 Window::EventListenerHandle 
-Window::AddKeyEventListener(KeyEventListener const &listener)
-{
-	EventListenerHandle handle = CreateEventListenerHandle();
-	m_keyEventListenerByHandle[handle] = listener;
-	return handle;
-}
-
-Window::EventListenerHandle 
 Window::AddQuitEventListener(QuitEventListener const &listener)
 {
 	EventListenerHandle handle = CreateEventListenerHandle();
@@ -21,7 +13,6 @@ Window::AddQuitEventListener(QuitEventListener const &listener)
 void 
 Window::RemoveEventListener(EventListenerHandle handle)
 {
-	m_keyEventListenerByHandle.erase(handle);
 	m_quitEventListenerByHandle.erase(handle);
 }
 

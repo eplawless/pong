@@ -2,11 +2,10 @@
 #include <Windows.h>
 #include <cstdint>
 
-#include "../Engine/Graphics/Drivers/d3d.h"
-#include "../Engine/Core/input.h"
 #include "../Engine/Core/input-mapper.h"
 #include "../Engine/Core/timer.h"
 #include "../Engine/Core/Window/Window.h"
+#include "../Engine/Graphics/Drivers/Renderer.h"
 
 #include "scene.h"
 #include "debug-overlay.h"
@@ -20,7 +19,7 @@ const float SCREEN_NEAR = 0.1f;
 class Game
 {
 public: // methods
-	Game(Window *pWindow, HWND hwnd);
+	Game(Window &window, Renderer &renderer);
 	~Game();
 
 	void Run();
@@ -37,12 +36,11 @@ private: // methods
 	void ShutdownWindow();
 
 private: // members
-	D3D m_d3d;
 	Timer m_timer;
 	InputMapper<PongEvent> m_inputMapper;
 	Scene m_scene;
 	DebugOverlay m_debugOverlay;
 
-	Window *m_pWindow;
-	HWND m_hWindow;
+	Window &m_window;
+	Renderer &m_renderer;
 };

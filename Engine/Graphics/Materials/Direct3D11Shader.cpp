@@ -1,21 +1,14 @@
-#include "shader.h"
+#include "Direct3D11Shader.h"
+
 #include "../../utility.h"
 
 #include <fstream>
 #include <d3dcompiler.h>
 #include <cstdlib>
 
-Shader::Shader()
-{
-}
-
-Shader::~Shader()
-{
-}
-
-void Shader::OutputShaderErrorMessage(
-	ID3D10Blob *pErrorMessage, 
-	HWND hwnd, 
+void Direct3D11Shader::OutputShaderErrorMessage(
+	ID3D10Blob *pErrorMessage,
+	HWND hwnd,
 	WCHAR *shaderFilename)
 {
 	const char *compileErrors = static_cast<const char *>(pErrorMessage->GetBufferPointer());
@@ -25,7 +18,7 @@ void Shader::OutputShaderErrorMessage(
 	fout.open("shader-error.log");
 	fout.write(compileErrors, bufferSize);
 	fout.close();
-	
+
 	MessageBox(
 		hwnd,
 		TEXT("Error compiling shader. Check shader-error.log for details."),
@@ -34,7 +27,7 @@ void Shader::OutputShaderErrorMessage(
 	);
 }
 
-bool Shader::InitializeVertexShader(
+bool Direct3D11Shader::InitializeVertexShader(
 	ID3D11Device *pDevice,
 	HWND hwnd,
 	WCHAR *filename,
@@ -85,11 +78,11 @@ bool Shader::InitializeVertexShader(
 	return true;
 }
 
-bool Shader::InitializePixelShader(
-	ID3D11Device *pDevice, 
-	HWND hwnd, 
-	WCHAR *filename, 
-	CHAR *entryPoint, 
+bool Direct3D11Shader::InitializePixelShader(
+	ID3D11Device *pDevice,
+	HWND hwnd,
+	WCHAR *filename,
+	CHAR *entryPoint,
 	ID3D11PixelShader **out_pPixelShader)
 {
 	ID3D10Blob* pErrorMessage = nullptr;

@@ -3,22 +3,23 @@
 #include <cstdint>
 #include <vector>
 
+#include "Drivers\Direct3D11Renderer.h"
+
 Model::Model()
 	: m_pVertexBuffer(nullptr)
 	, m_pIndexBuffer(nullptr)
 {
 }
 
-bool Model::Initialize(
-	ID3D11Device *pDevice)
+bool Model::Initialize(Window &window, Renderer &renderer)
 {
-	TCHAR *textureFilename = TEXT("Assets/Textures/example.gif");
-	if (!m_texture.Initialize(pDevice, textureFilename))
+	Direct3D11Renderer *pRenderer = dynamic_cast<Direct3D11Renderer*>(&renderer);
+	if (pRenderer == nullptr)
 	{
 		return false;
 	}
 
-	if (!InitializeBuffers(pDevice))
+	if (!InitializeBuffers(pRenderer->GetDevice()))
 	{
 		return false;
 	}
@@ -28,14 +29,22 @@ bool Model::Initialize(
 
 void Model::Shutdown()
 {
-	m_texture.Shutdown();
 	ShutdownBuffers();
 }
 
-void Model::Render(
-	ID3D11DeviceContext *pDeviceContext)
+void Model::Render(Renderer &renderer)
 {
-	RenderBuffers(pDeviceContext);
+	Direct3D11Renderer *pRenderer = dynamic_cast<Direct3D11Renderer*>(&renderer);
+	if (pRenderer == nullptr) { return; }
+
+	uint32_t vertexStride = sizeof(VertexType);
+	uint32_t vertexOffset = 0;
+
+	ID3D11DeviceContext *pDeviceContext = pRenderer->GetDeviceContext();
+	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &vertexStride, &vertexOffset);
+	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDeviceContext->DrawIndexed(GetIndexCount(), 0, 0);
 }
 
 Model Model::CreateQuad(float width, float height)
@@ -121,10 +130,4 @@ void Model::ShutdownBuffers()
 void Model::RenderBuffers(
 	ID3D11DeviceContext *pDeviceContext)
 {
-	uint32_t vertexStride = sizeof(VertexType);
-	uint32_t vertexOffset = 0;
-
-	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &vertexStride, &vertexOffset);
-	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

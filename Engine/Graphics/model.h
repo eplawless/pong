@@ -4,8 +4,9 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "texture.h"
 #include "../utility.h"
+#include "../Core/Window/Window.h"
+#include "Drivers/Renderer.h"
 
 class Model
 {
@@ -17,11 +18,10 @@ private: // types
 	};
 
 public: // methods
-	bool Initialize(ID3D11Device *pDevice);
+	bool Initialize(Window &window, Renderer &renderer);
 	void Shutdown();
-	void Render(ID3D11DeviceContext *pDeviceContext);
+	void Render(Renderer &renderer);
 	uint32_t GetIndexCount() { return static_cast<uint32_t>(m_arrIndices.size()); }
-	ID3D11ShaderResourceView *GetTexture() { return m_texture.GetTexture(); }
 
 	Model(Model &&) = default;
 	Model &operator=(Model &&) = default;
@@ -38,8 +38,6 @@ private: // methods
 	void RenderBuffers(ID3D11DeviceContext *pDeviceContext);
 
 private: // members
-	Texture m_texture;
-
 	ID3D11Buffer *m_pVertexBuffer;
 	ID3D11Buffer *m_pIndexBuffer;
 	std::vector<VertexType> m_arrVertices;

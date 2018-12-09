@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 #include <functional>
 #include <map>
 
@@ -9,7 +10,6 @@
 class Window
 {
 public: // types
-	using KeyEventListener = std::function<void(Input::KeyEvent const &)>;
 	using QuitEventListener = std::function<void(int)>;
 	struct EventListenerHandle
 	{
@@ -20,13 +20,17 @@ public: // types
 public: // methods
 	virtual void Show() = 0;
 	virtual void Hide() = 0;
+	
 	virtual void PumpMessages() = 0;
+	
+	virtual void ShowMessageBox(std::wstring const &title, std::wstring const &message) = 0;
+	virtual void ShowMessageBox(std::string const &title, std::string const &message) = 0;
 
 	uint32_t GetWidth() const { return m_width; }
 	uint32_t GetHeight() const { return m_height; }
 
 	Input &GetInput() { return m_input; }
-	EventListenerHandle AddKeyEventListener(KeyEventListener const &listener);
+
 	EventListenerHandle AddQuitEventListener(QuitEventListener const &listener);
 	void RemoveEventListener(EventListenerHandle handle);
 
@@ -36,7 +40,6 @@ protected: // methods
 	EventListenerHandle CreateEventListenerHandle();
 	
 protected: // members
-	std::map<EventListenerHandle, KeyEventListener> m_keyEventListenerByHandle;
 	std::map<EventListenerHandle, QuitEventListener> m_quitEventListenerByHandle;
 	uint32_t m_width;
 	uint32_t m_height;

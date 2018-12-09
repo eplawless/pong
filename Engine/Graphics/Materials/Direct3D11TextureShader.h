@@ -1,14 +1,16 @@
 #pragma once
 
-#include "shader.h"
-#include "../texture.h"
-#include "../../utility.h"
-
+#include <string>
 #include <cstdint>
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-class TextureShader : Shader
+#include "Direct3D11Shader.h"
+#include "../Drivers/Direct3D11Renderer.h"
+#include "../texture.h"
+#include "../../utility.h"
+
+class Direct3D11TextureShader : public Direct3D11Shader
 {
 private: // types
 	struct MatrixBuffer
@@ -19,15 +21,16 @@ private: // types
 	};
 
 public: // methods
-	bool Initialize(ID3D11Device *pDevice, HWND hwnd);
-	void Shutdown();
-	bool Render(
-		ID3D11DeviceContext *pDeviceContext,
-		uint32_t indexCount,
+	Direct3D11TextureShader(
+		Direct3D11Renderer &renderer,
+		std::wstring textureFilename);
+
+	virtual bool Initialize() override;
+	virtual void Shutdown() override;
+	virtual void Render(
 		DirectX::XMMATRIX objectToWorld,
 		DirectX::XMMATRIX worldToView,
-		DirectX::XMMATRIX viewToClip,
-		ID3D11ShaderResourceView *pTexture);
+		DirectX::XMMATRIX viewToClip) override;
 
 private: // methods
 	bool InitializeShader(
@@ -49,6 +52,9 @@ private: // methods
 	void RenderShader(ID3D11DeviceContext *pDeviceContext, uint32_t indexCount);
 
 private: // members
+	Direct3D11Renderer &m_renderer;
+	std::wstring m_textureFilename;
+	Texture m_texture;
 	ScopedD3DPointer<ID3D11VertexShader> m_pVertexShader;
 	ScopedD3DPointer<ID3D11PixelShader> m_pPixelShader;
 	ScopedD3DPointer<ID3D11InputLayout> m_pInputLayout;

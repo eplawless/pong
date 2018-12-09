@@ -1,9 +1,23 @@
-#include "texture-shader.h"
+#include "Direct3D11TextureShader.h"
 
-bool TextureShader::Initialize(
-	ID3D11Device *pDevice, 
-	HWND hwnd)
+Direct3D11TextureShader::Direct3D11TextureShader(
+	Direct3D11Renderer &renderer, 
+	std::wstring textureFilename)
+	: m_renderer(renderer)
+	, m_textureFilename(textureFilename)
 {
+}
+
+bool Direct3D11TextureShader::Initialize()
+{
+	ID3D11Device *pDevice = m_renderer.GetDevice();
+	HWND hwnd = m_renderer.GetWindowHandle();
+
+	if (!m_texture.Initialize(pDevice, m_textureFilename.c_str()))
+	{
+		return false;
+	}
+
 	TCHAR *vsFilename = TEXT("Engine/Graphics/Materials/texture-vs.hlsl");
 	TCHAR *psFilename = TEXT("Engine/Graphics/Materials/texture-ps.hlsl");
 	if (!InitializeShader(pDevice, hwnd, vsFilename, psFilename))
@@ -14,29 +28,44 @@ bool TextureShader::Initialize(
 	return true;
 }
 
-void TextureShader::Shutdown()
+void Direct3D11TextureShader::Shutdown()
 {
+	m_texture.Shutdown();
 	ShutdownShader();
 }
 
-bool TextureShader::Render(
-	ID3D11DeviceContext *pDeviceContext, 
-	uint32_t indexCount, 
+void Direct3D11TextureShader::Render(
 	DirectX::XMMATRIX objectToWorld, 
 	DirectX::XMMATRIX worldToView, 
-	DirectX::XMMATRIX viewToClip,
-	ID3D11ShaderResourceView *pTexture)
+	DirectX::XMMATRIX viewToClip)
 {
-	if (!SetShaderParameters(pDeviceContext, objectToWorld, worldToView, viewToClip, pTexture))
-	{
-		return false;
-	}
+	// transpose because default matrix packing is column major
+	MatrixBuffer columnMajorMatrixBuffer;
+	columnMajorMatrixBuffer.objectToWorld = DirectX::XMMatrixTranspose(objectToWorld);
+	columnMajorMatrixBuffer.worldToView = DirectX::XMMatrixTranspose(worldToView);
+	columnMajorMatrixBuffer.viewToClip = DirectX::XMMatrixTranspose(viewToClip);
 
-	RenderShader(pDeviceContext, indexCount);
-	return true;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	ID3D11DeviceContext *pDeviceContext = m_renderer.GetDeviceContext();
+	HRESULT lockBufferOk = pDeviceContext->Map(m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(lockBufferOk))
+	{
+		return;
+	}
+	memcpy_s(mappedResource.pData, sizeof(MatrixBuffer), &columnMajorMatrixBuffer, sizeof(MatrixBuffer));
+	pDeviceContext->Unmap(m_pMatrixBuffer.Get(), 0);
+
+	uint32_t bufferNumber = 0;
+	ID3D11ShaderResourceView *pTextureView = m_texture.GetTexture();
+	pDeviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_pMatrixBuffer.Get());
+	pDeviceContext->PSSetShaderResources(0, 1, &pTextureView);
+	pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
+	pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
+	pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+	pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState.Get());
 }
 
-bool TextureShader::InitializeShader(
+bool Direct3D11TextureShader::InitializeShader(
 	ID3D11Device *pDevice, 
 	HWND hwnd, 
 	TCHAR *vsFilename, 
@@ -89,7 +118,7 @@ bool TextureShader::InitializeShader(
 	return true;
 }
 
-bool TextureShader::InitializeInputLayout(
+bool Direct3D11TextureShader::InitializeInputLayout(
 	ID3D11Device *pDevice, 
 	ID3D10Blob *pVertexShaderBuffer, 
 	ID3D11InputLayout **out_pInputLayout)
@@ -127,51 +156,11 @@ bool TextureShader::InitializeInputLayout(
 	return true;
 }
 
-void TextureShader::ShutdownShader()
+void Direct3D11TextureShader::ShutdownShader()
 {
 	m_pSamplerState.Reset();
 	m_pMatrixBuffer.Reset();
 	m_pInputLayout.Reset();
 	m_pPixelShader.Reset();
 	m_pVertexShader.Reset();
-}
-
-bool TextureShader::SetShaderParameters(
-	ID3D11DeviceContext *pDeviceContext, 
-	DirectX::XMMATRIX objectToWorld, 
-	DirectX::XMMATRIX worldToView, 
-	DirectX::XMMATRIX viewToClip,
-	ID3D11ShaderResourceView *pTexture)
-{
-	// transpose because default matrix packing is column major
-	MatrixBuffer columnMajorMatrixBuffer;
-	columnMajorMatrixBuffer.objectToWorld = DirectX::XMMatrixTranspose(objectToWorld);
-	columnMajorMatrixBuffer.worldToView = DirectX::XMMatrixTranspose(worldToView);
-	columnMajorMatrixBuffer.viewToClip = DirectX::XMMatrixTranspose(viewToClip);
-
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	HRESULT lockBufferOk = pDeviceContext->Map(m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(lockBufferOk)) 
-	{ 
-		return false; 
-	}
-	memcpy_s(mappedResource.pData, sizeof(MatrixBuffer), &columnMajorMatrixBuffer, sizeof(MatrixBuffer));
-	pDeviceContext->Unmap(m_pMatrixBuffer.Get(), 0);
-
-	uint32_t bufferNumber = 0;
-	pDeviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_pMatrixBuffer.Get());
-	pDeviceContext->PSSetShaderResources(0, 1, &pTexture);
-
-	return true;
-}
-
-void TextureShader::RenderShader(
-	ID3D11DeviceContext *pDeviceContext, 
-	uint32_t indexCount)
-{
-	pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
-	pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
-	pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
-	pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState.Get());
-	pDeviceContext->DrawIndexed(indexCount, 0, 0);
 }

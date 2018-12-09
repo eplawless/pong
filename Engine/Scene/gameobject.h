@@ -3,13 +3,13 @@
 #include <memory>
 #include <vector>
 #include <cstdint>
-#include "../Graphics/Drivers/d3d.h"
+#include "../Graphics/Drivers/Direct3D11Renderer.h"
 
 class GameObject
 {
 public: // methods
 	virtual ~GameObject() {}
-	bool Initialize(D3D &d3d);
+	bool Initialize(Direct3D11Renderer &d3d);
 	void Shutdown();
 	virtual void Reset() {};
 	virtual void Update(uint64_t usdt) {};
@@ -20,5 +20,5 @@ protected: // methods
 	virtual void ShutdownImpl() {};
 
 protected: // members
-	D3D *m_pD3D;
+	Direct3D11Renderer *m_pD3D;
 };

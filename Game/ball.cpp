@@ -20,9 +20,9 @@ void Ball::Reset()
 	m_velocityY = 0.5f;
 }
 
-bool Ball::Initialize(D3D &d3d)
+bool Ball::Initialize(Window &window, Renderer &renderer)
 {
-	return m_model.Initialize(d3d.GetDevice());
+	return m_model.Initialize(window, renderer);
 }
 
 void Ball::Shutdown()
@@ -50,22 +50,15 @@ void Ball::Update(uint64_t usdt)
 }
 
 void Ball::Render(
-	D3D &d3d, 
-	TextureShader &shader, 
-	DirectX::XMMATRIX objectToWorld, 
-	DirectX::XMMATRIX worldToView, 
+	Renderer &renderer,
+	Shader &shader,
+	DirectX::XMMATRIX objectToWorld,
+	DirectX::XMMATRIX worldToView,
 	DirectX::XMMATRIX viewToClip)
 {
-	ID3D11DeviceContext *pDeviceContext = d3d.GetDeviceContext();
-	m_model.Render(pDeviceContext);
-	shader.Render(
-		pDeviceContext,
-		m_model.GetIndexCount(),
-		objectToWorld * DirectX::XMMatrixTranslation(m_bounds.positionX, m_bounds.positionY, 0.0f),
-		worldToView,
-		viewToClip,
-		m_model.GetTexture()
-	);
+	objectToWorld = objectToWorld * DirectX::XMMatrixTranslation(m_bounds.positionX, m_bounds.positionY, 0.0f);
+	shader.Render(objectToWorld, worldToView, viewToClip);
+	m_model.Render(renderer);
 }
 
 Vector2D Ball::GetVelocity() const

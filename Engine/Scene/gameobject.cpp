@@ -1,6 +1,6 @@
 #include "gameobject.h"
 
-bool GameObject::Initialize(D3D &d3d)
+bool GameObject::Initialize(Direct3D11Renderer &d3d)
 {
 	m_pD3D = &d3d;
 	return InitializeImpl();

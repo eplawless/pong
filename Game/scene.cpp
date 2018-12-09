@@ -12,24 +12,22 @@ Scene::Scene()
 {
 }
 
-bool Scene::Initialize(D3D &d3d)
+bool Scene::Initialize(Window &window, Renderer &renderer)
 {
-	HWND hwnd = d3d.GetWindowHandle();
-	ID3D11Device *pDevice = d3d.GetDevice();
-
 	m_camera.SetPosition(0.0f, 0.0f, -10.0f);
 
-	if (   !m_leftPaddle.Initialize(d3d) 
-		|| !m_rightPaddle.Initialize(d3d) 
-		|| !m_ball.Initialize(d3d))
+	if (   !m_leftPaddle.Initialize(window, renderer) 
+		|| !m_rightPaddle.Initialize(window, renderer)
+		|| !m_ball.Initialize(window, renderer))
 	{
-		MessageBox(hwnd, TEXT("Could not initialize the paddle and ball objects."), TEXT("Error"), MB_OK);
+		window.ShowMessageBox("Error", "Could not initialize the paddle and ball objects.");
 		return false;
 	}
 
-	if (!m_shader.Initialize(pDevice, hwnd))
+	m_textureShader = renderer.GetTextureShader(L"Assets/Textures/Wood.gif");
+	if (!m_textureShader->Initialize())
 	{
-		MessageBox(hwnd, TEXT("Could not initialize the shader object."), TEXT("Error"), MB_OK);
+		window.ShowMessageBox("Error", "Could not initialize the texture shader.");
 		return false;
 	}
 	
@@ -38,10 +36,11 @@ bool Scene::Initialize(D3D &d3d)
 
 void Scene::Shutdown()
 {
-	m_shader.Shutdown();
+	m_textureShader->Shutdown();
 	m_ball.Shutdown();
 	m_leftPaddle.Shutdown();
 	m_rightPaddle.Shutdown();
+	m_textureShader.reset();
 }
 
 void Scene::Reset()
@@ -69,15 +68,15 @@ void Scene::Update(int64_t usDeltaTime)
 	if (CollideBallWithGoals()) { Reset(); }
 }
 
-void Scene::Render(D3D &d3d)
+void Scene::Render(Renderer &renderer)
 {
-	DirectX::XMMATRIX objectToWorld = d3d.GetWorldMatrix();
+	DirectX::XMMATRIX objectToWorld = renderer.GetWorldMatrix();
 	DirectX::XMMATRIX worldToView = m_camera.GetViewMatrix();
-	DirectX::XMMATRIX viewToClip = d3d.GetProjectionMatrix();
+	DirectX::XMMATRIX viewToClip = renderer.GetProjectionMatrix();
 
-	m_leftPaddle.Render(d3d, m_shader, objectToWorld, worldToView, viewToClip);
-	m_rightPaddle.Render(d3d, m_shader, objectToWorld, worldToView, viewToClip);
-	m_ball.Render(d3d, m_shader, objectToWorld, worldToView, viewToClip);
+	m_leftPaddle.Render(renderer, *m_textureShader, objectToWorld, worldToView, viewToClip);
+	m_rightPaddle.Render(renderer, *m_textureShader, objectToWorld, worldToView, viewToClip);
+	m_ball.Render(renderer, *m_textureShader, objectToWorld, worldToView, viewToClip);
 }
 
 bool Scene::CollideBallWithPaddles()

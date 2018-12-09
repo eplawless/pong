@@ -3,10 +3,11 @@
 #include <cstdint>
 
 #include "pong-event.h"
-#include "../Engine/Graphics/Drivers/d3d.h"
+#include "../Engine/Core/Window/Window.h"
+#include "../Engine/Graphics/Drivers/Renderer.h"
+#include "../Engine/Graphics/Materials/Shader.h"
 #include "../Engine/Graphics/model.h"
 #include "../Engine/utility.h"
-#include "../Engine/Graphics/Materials/texture-shader.h"
 
 class Paddle
 {
@@ -17,13 +18,13 @@ public: // types
 public: // methods
 	Paddle(float positionX, Side side);
 	void Reset();
-	bool Initialize(D3D &d3d);
+	bool Initialize(Window &window, Renderer &renderer);
 	void Shutdown();
 	void HandleEvents(PongEventList const &arrEvents);
 	void Update(uint64_t usdt);
 	void Render(
-		D3D &d3d, 
-		TextureShader &shader,
+		Renderer &renderer, 
+		Shader &shader,
 		DirectX::XMMATRIX objectToWorld,
 		DirectX::XMMATRIX worldToView,
 		DirectX::XMMATRIX viewToClip);

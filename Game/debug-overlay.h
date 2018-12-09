@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Engine/Graphics/Drivers/d3d.h"
+#include "../Engine/Graphics/Drivers/Direct3D11Renderer.h"
 
 class DebugOverlay
 {
@@ -12,7 +12,7 @@ public: // types
 
 public: // methods
 	DebugOverlay();
- 	bool Initialize(HWND hwnd, D3D &d3d);
+ 	bool Initialize(HWND hwnd, Direct3D11Renderer &d3d);
  	void Shutdown();
 	bool IsVisible() const { return m_isVisible; }
 	void SetVisible(bool isVisible);

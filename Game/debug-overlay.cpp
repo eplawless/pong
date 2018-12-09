@@ -12,7 +12,7 @@ DebugOverlay::DebugOverlay()
 
 bool DebugOverlay::Initialize(
 	HWND hwnd, 
-	D3D &d3d)
+	Direct3D11Renderer &d3d)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();

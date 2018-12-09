@@ -1,14 +1,15 @@
-#include "d3d.h"
+#include "Direct3D11Renderer.h"
 
 #include <vector>
 #include <cassert>
 
 #include "../../utility.h"
+#include "../Materials/Direct3D11TextureShader.h"
 
 static const uint32_t BYTES_PER_MEGABYTE = 1024 * 1024;
 
-D3D::D3D()
-	: m_hWindow(nullptr)
+Direct3D11Renderer::Direct3D11Renderer(Win32Window &window)
+	: m_window(window)
 	, m_vsyncEnabled(false)
 	, m_isFullscreen(false)
 	, m_videoCardMemoryInMB(0)
@@ -24,16 +25,12 @@ D3D::D3D()
 	ZeroMemory(&m_videoCardDescription, sizeof(m_videoCardDescription) / sizeof(*m_videoCardDescription));
 }
 
-bool D3D::Initialize(
-	uint32_t windowWidth, 
-	uint32_t windowHeight, 
+bool Direct3D11Renderer::Initialize(
 	bool vsyncEnabled, 
-	HWND hwnd, 
 	bool isFullscreen, 
 	float screenDepth, 
 	float screenNear)
 {
-	m_hWindow = hwnd;
 	m_vsyncEnabled = vsyncEnabled;
 	m_isFullscreen = isFullscreen;
 
@@ -43,6 +40,8 @@ bool D3D::Initialize(
 		return false;
 	}
 
+	uint32_t windowWidth = m_window.GetWidth();
+	uint32_t windowHeight = m_window.GetHeight();
 	uint32_t refreshRateNumerator = 0;
 	uint32_t refreshRateDenominator = 1;
 	bool deviceInfoOk = InitializeDeviceInfo(
@@ -59,7 +58,7 @@ bool D3D::Initialize(
 	}
 
 	bool swapChainOk = InitializeSwapChainAndDevice(
-		hwnd,
+		m_window.GetHandle(),
 		windowWidth, 
 		windowHeight, 
 		refreshRateNumerator, 
@@ -120,7 +119,7 @@ bool D3D::Initialize(
 	return true;
 }
 
-void D3D::Shutdown()
+void Direct3D11Renderer::Shutdown()
 {
 	if (m_pSwapChain)
 	{
@@ -136,19 +135,24 @@ void D3D::Shutdown()
 	m_pSwapChain.Reset();
 }
 
-void D3D::BeginScene(float red, float green, float blue, float alpha)
+void Direct3D11Renderer::BeginScene(float red, float green, float blue, float alpha)
 {
 	float color[4] = { red, green, blue, alpha };
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void D3D::EndScene()
+void Direct3D11Renderer::EndScene()
 {
 	m_pSwapChain->Present(m_vsyncEnabled ? 1 : 0, 0);
 }
 
-void D3D::GetVideoCardInfo(
+Shader::SharedPointer Direct3D11Renderer::GetTextureShader(std::wstring const &textureFilename)
+{
+	return Shader::SharedPointer(new Direct3D11TextureShader(*this, textureFilename));
+}
+
+void Direct3D11Renderer::GetVideoCardInfo(
 	char *out_videoCardName, 
 	size_t maxVideoCardNameLength, 
 	int32_t &out_videoCardMemoryInMB)
@@ -158,22 +162,22 @@ void D3D::GetVideoCardInfo(
 	out_videoCardMemoryInMB = m_videoCardMemoryInMB;
 }
 
-DirectX::XMMATRIX D3D::GetProjectionMatrix()
+DirectX::XMMATRIX Direct3D11Renderer::GetProjectionMatrix()
 {
 	return XMLoadFloat4x4(&m_projectionMatrix);
 }
 
-DirectX::XMMATRIX D3D::GetWorldMatrix()
+DirectX::XMMATRIX Direct3D11Renderer::GetWorldMatrix()
 {
 	return XMLoadFloat4x4(&m_worldMatrix);
 }
 
-DirectX::XMMATRIX D3D::GetOrthoMatrix()
+DirectX::XMMATRIX Direct3D11Renderer::GetOrthoMatrix()
 {
 	return XMLoadFloat4x4(&m_orthoMatrix);
 }
 
-bool D3D::InitializeDeviceInfo(
+bool Direct3D11Renderer::InitializeDeviceInfo(
 	uint32_t windowWidth, 
 	uint32_t windowHeight,
 	uint32_t *out_refreshRateNumerator,
@@ -260,7 +264,7 @@ bool D3D::InitializeDeviceInfo(
 	return true;
 }
 
-bool D3D::InitializeSwapChainAndDevice(
+bool Direct3D11Renderer::InitializeSwapChainAndDevice(
 	HWND hwnd,
 	uint32_t windowWidth, 
 	uint32_t windowHeight, 
@@ -312,7 +316,7 @@ bool D3D::InitializeSwapChainAndDevice(
 	return true;
 }
 
-bool D3D::InitializeRenderTargetView(
+bool Direct3D11Renderer::InitializeRenderTargetView(
 	ID3D11RenderTargetView **out_pRenderTargetView)
 {
 	assert(m_pSwapChain);
@@ -334,7 +338,7 @@ bool D3D::InitializeRenderTargetView(
 	return true;
 }
 
-bool D3D::InitializeDepthStencil(
+bool Direct3D11Renderer::InitializeDepthStencil(
 	uint32_t windowWidth,
 	uint32_t windowHeight,
 	ID3D11Texture2D **out_pDepthStencilBuffer, 
@@ -411,7 +415,7 @@ bool D3D::InitializeDepthStencil(
 	return true;
 }
 
-bool D3D::InitializeRasterizerState(
+bool Direct3D11Renderer::InitializeRasterizerState(
 	ID3D11RasterizerState **out_pRasterizerState)
 {
 	assert(m_pDevice);
@@ -441,7 +445,7 @@ bool D3D::InitializeRasterizerState(
 	return true;
 }
 
-bool D3D::InitializeViewport(
+bool Direct3D11Renderer::InitializeViewport(
 	uint32_t windowWidth, 
 	uint32_t windowHeight)
 {
@@ -461,7 +465,7 @@ bool D3D::InitializeViewport(
 	return true;
 }
 
-bool D3D::InitializeMatrices(
+bool Direct3D11Renderer::InitializeMatrices(
 	uint32_t windowWidth, 
 	uint32_t windowHeight, 
 	float screenNear,

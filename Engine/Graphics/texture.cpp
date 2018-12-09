@@ -4,7 +4,7 @@
 
 bool Texture::Initialize(
 	ID3D11Device *pDevice, 
-	WCHAR *filename)
+	WCHAR const *filename)
 {
 	HRESULT textureOk = DirectX::CreateWICTextureFromFile(
 		pDevice,

@@ -11,27 +11,29 @@
 #include <DirectXMath.h>
 
 #include "../../utility.h"
+#include "../../Core/Window/Win32Window.h"
 
-class D3D
+#include "Renderer.h"
+#include "../Materials/shader.h"
+
+class Direct3D11Renderer : public Renderer
 {
 public: // methods
-	D3D();
+	Direct3D11Renderer(Win32Window &window);
 
-	bool Initialize(
-		uint32_t windowWidth, 
-		uint32_t windowHeight,
-		bool vsyncEnabled, 
-		HWND hwnd, 
-		bool isFullscreen, // TODO: this
-		float screenDepth,
-		float screenNear);
+	// TODO: implement fullscreen
+	virtual bool Initialize(bool vsyncEnabled, bool isFullscreen, float screenDepth, float screenNear) override;
+	virtual void Shutdown() override;
+	virtual void BeginScene(float red, float green, float blue, float alpha) override;
+	virtual void EndScene() override;
 
-	void Shutdown();
+	virtual Shader::SharedPointer GetTextureShader(std::wstring const &textureFilename) override;
 
-	void BeginScene(float red, float green, float blue, float alpha);
-	void EndScene();
+	virtual DirectX::XMMATRIX GetProjectionMatrix() override;
+	virtual DirectX::XMMATRIX GetWorldMatrix() override;
+	virtual DirectX::XMMATRIX GetOrthoMatrix() override;
 
-	HWND GetWindowHandle() { return m_hWindow; }
+	HWND GetWindowHandle() { return m_window.GetHandle(); }
 
 	ID3D11Device *GetDevice() { return m_pDevice.Get(); }
 	ID3D11DeviceContext *GetDeviceContext() { return m_pDeviceContext.Get(); }
@@ -40,10 +42,6 @@ public: // methods
 		char *out_videoCardName, 
 		size_t maxVideoCardNameLength, 
 		int32_t &out_videoCardMemoryInMB);
-
-	DirectX::XMMATRIX GetProjectionMatrix();
-	DirectX::XMMATRIX GetWorldMatrix();
-	DirectX::XMMATRIX GetOrthoMatrix();
 
 private: // methods
 	bool InitializeDeviceInfo(
@@ -95,7 +93,7 @@ private: // static members
 	static const size_t VIDEO_CARD_DESCRIPTION_MAX_LENGTH = 128;
 
 private: // members
-	HWND m_hWindow;
+	Win32Window &m_window;
 	bool m_vsyncEnabled;
 	bool m_isFullscreen;
 	uint32_t m_videoCardMemoryInMB;

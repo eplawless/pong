@@ -13,6 +13,8 @@ public: // methods
 	virtual void Show() override;
 	virtual void Hide() override;
 	virtual void PumpMessages() override;
+	virtual void ShowMessageBox(std::wstring const &title, std::wstring const &message) override;
+	virtual void ShowMessageBox(std::string const &title, std::string const &message) override;
 
 	HWND GetHandle() const { return m_hWindow; }
 
