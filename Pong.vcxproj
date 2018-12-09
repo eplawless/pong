@@ -56,6 +56,8 @@
   <ItemGroup>
     <ClCompile Include="engine\core\input.cpp" />
     <ClCompile Include="engine\core\timer.cpp" />
+    <ClCompile Include="Engine\Core\Window\Win32Window.cpp" />
+    <ClCompile Include="Engine\Core\Window\Window.cpp" />
     <ClCompile Include="engine\graphics\camera.cpp" />
     <ClCompile Include="engine\graphics\drivers\d3d.cpp" />
     <ClCompile Include="engine\graphics\materials\color-shader.cpp" />
@@ -83,6 +85,8 @@
     <ClInclude Include="engine\core\input-mapper.h" />
     <ClInclude Include="engine\core\input.h" />
     <ClInclude Include="engine\core\timer.h" />
+    <ClInclude Include="Engine\Core\Window\Win32Window.h" />
+    <ClInclude Include="Engine\Core\Window\Window.h" />
     <ClInclude Include="engine\graphics\camera.h" />
     <ClInclude Include="engine\graphics\drivers\d3d.h" />
     <ClInclude Include="engine\graphics\materials\color-shader.h" />
