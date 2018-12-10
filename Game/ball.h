@@ -6,6 +6,7 @@
 #include "../Engine/Graphics/Drivers/Renderer.h"
 #include "../Engine/Graphics/Materials/Shader.h"
 #include "../Engine/Graphics/model.h"
+#include "../Engine/Physics/Physics.h"
 #include "../Engine/utility.h"
 #include "paddle.h"
 
@@ -27,12 +28,9 @@ public: // methods
 
 	Vector2D GetVelocity() const;
 	void SetVelocity(Vector2D const &velocity);
-	Box2D const &GetBounds() const { return m_bounds; }
+	Box2D GetBounds() const;
 
 private: // members
-	Box2D m_bounds;
-	float m_velocityX;
-	float m_velocityY;
-
+	Physics::ObjectHandle m_hCircle;
 	Model m_model;
 };

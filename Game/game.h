@@ -6,6 +6,7 @@
 #include "../Engine/Core/timer.h"
 #include "../Engine/Core/Window/Window.h"
 #include "../Engine/Graphics/Drivers/Renderer.h"
+#include "../Engine/Physics/Physics.h"
 
 #include "scene.h"
 #include "debug-overlay.h"

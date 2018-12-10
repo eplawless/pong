@@ -44,18 +44,18 @@ int sign(T value)
 
 struct Point2D
 {
-	float x;
-	float y;
+	double x;
+	double y;
 };
 
 using Vector2D = Point2D;
 
 struct Box2D
 {
-	float positionX;
-	float positionY;
-	float sizeX;
-	float sizeY;
+	double positionX;
+	double positionY;
+	double sizeX;
+	double sizeY;
 
 	Point2D GetCenter() const
 	{

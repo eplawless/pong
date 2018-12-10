@@ -71,6 +71,7 @@
     <ClCompile Include="engine\libraries\dearimgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="engine\libraries\dearimgui\imgui_impl_win32.cpp" />
     <ClCompile Include="engine\libraries\dearimgui\imgui_widgets.cpp" />
+    <ClCompile Include="Engine\Physics\Physics.cpp" />
     <ClCompile Include="engine\scene\gameobject.cpp" />
     <ClCompile Include="engine\scene\system.cpp" />
     <ClCompile Include="engine\utility.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="engine\libraries\directxtk\include\WICTextureLoader.h" />
     <ClInclude Include="engine\libraries\directxtk\include\XboxDDSTextureLoader.h" />
     <ClInclude Include="engine\libraries\nonstd\optional.hpp" />
+    <ClInclude Include="Engine\Physics\Physics.h" />
     <ClInclude Include="engine\scene\gameobject.h" />
     <ClInclude Include="engine\scene\system.h" />
     <ClInclude Include="engine\utility.h" />
