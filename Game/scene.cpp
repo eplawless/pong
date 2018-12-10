@@ -37,10 +37,10 @@ bool Scene::Initialize(Window &window, Renderer &renderer)
 void Scene::Shutdown()
 {
 	m_textureShader->Shutdown();
-	m_ball.Shutdown();
-	m_leftPaddle.Shutdown();
-	m_rightPaddle.Shutdown();
 	m_textureShader.reset();
+	m_ball.Shutdown();
+	m_rightPaddle.Shutdown();
+	m_leftPaddle.Shutdown();
 }
 
 void Scene::Reset()
