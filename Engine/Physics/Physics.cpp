@@ -24,8 +24,13 @@ Physics::ObjectHandle Physics::CreateCircle(double x, double y, double vx, doubl
 
 Physics::ObjectHandle Physics::CreateBox(double top, double left, double width, double height)
 {
+	return CreateBox(top, left, 0, 0, width, height);
+}
+
+Physics::ObjectHandle Physics::CreateBox(double top, double left, double vx, double vy, double width, double height)
+{
 	ObjectHandle handle = CreateObjectHandle();
-	m_boxByHandle[handle] = { {top, left}, {0, 0}, {width, height} };
+	m_boxByHandle[handle] = { { top, left }, { vx, vy }, {width, height} };
 	return handle;
 }
 
