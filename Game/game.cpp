@@ -23,7 +23,7 @@ Game::Game(Window &window, Renderer &renderer)
 	, m_window(window)
 	, m_renderer(renderer)
 {
-	Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	Initialize();
 }
 
 Game::~Game()
@@ -102,9 +102,7 @@ void Game::Render()
 	m_renderer.EndScene();
 }
 
-bool Game::Initialize(
-	uint32_t windowWidth, 
-	uint32_t windowHeight)
+bool Game::Initialize()
 {
 	m_renderer.Initialize(true, false, SCREEN_DEPTH, SCREEN_NEAR);
 	//m_debugOverlay.Initialize(m_hWindow, m_d3d);

@@ -7,6 +7,7 @@
 #include "../Engine/Graphics/Drivers/Renderer.h"
 #include "../Engine/Graphics/Materials/Shader.h"
 #include "../Engine/Graphics/model.h"
+#include "../Engine/Physics/Physics.h"
 #include "../Engine/utility.h"
 
 class Paddle
@@ -29,14 +30,13 @@ public: // methods
 		DirectX::XMMATRIX worldToView,
 		DirectX::XMMATRIX viewToClip);
 
-	Box2D const &GetBounds() const { return m_bounds; }
+	Box2D GetBounds() const;
 
 private: // members
 	Side m_side;
-	Box2D m_bounds;
 	Movement m_moveState;
-	float m_moveSpeedY;
-	float m_height;
-
+	double m_defaultPositionX;
+	double m_moveSpeed;
+	Physics::ObjectHandle m_hBox;
 	Model m_model;
 };

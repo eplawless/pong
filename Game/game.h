@@ -33,7 +33,7 @@ private: // methods
 	void Update(int64_t usDeltaTime);
 	void ToggleDebugOverlay();
 	void Render();
-	bool Initialize(uint32_t width, uint32_t height);
+	bool Initialize();
 	void ShutdownWindow();
 
 private: // members

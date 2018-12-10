@@ -13,21 +13,23 @@ public: // types
 		bool operator<(ObjectHandle const &other) const { return id < other.id; }
 	};
 
-	struct Vector2D {
+	struct Vector 
+	{
 		double x;
 		double y;
 	};
 
-	struct Box {
-		Vector2D position;
-		Vector2D velocity;
-		Vector2D size;
+	struct Box 
+	{
+		Vector position;
+		Vector velocity;
+		Vector size;
 	};
 
 	struct Circle
 	{
-		Vector2D position;
-		Vector2D velocity;
+		Vector position;
+		Vector velocity;
 		double radius;
 	};
 
