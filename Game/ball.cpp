@@ -12,23 +12,23 @@ Ball::Ball()
 
 void Ball::Reset()
 {
-	Physics::Circle &circle = Physics::Get().GetCircle(m_hCircle);
-	circle.position.x = 0.5;
-	circle.position.y = 0.5;
-	circle.velocity.x = 0.5;
-	circle.velocity.y = 0.5;
+	if (!m_ball) return;
+	m_ball->position.x = 0.5;
+	m_ball->position.y = 0.5;
+	m_ball->velocity.x = 0.5;
+	m_ball->velocity.y = 0.5;
 }
 
 bool Ball::Initialize(Window &window, Renderer &renderer)
 {
-	m_hCircle = Physics::Get().CreateCircle(0.5, 0.5, 0.5, 0.5, 0.1);
+	m_ball.emplace(Physics::Get().CreateBall(0.5, 0.5, 0.5, 0.5, 0.1));
 	return m_model.Initialize(window, renderer);
 }
 
 void Ball::Shutdown()
 {
 	m_model.Shutdown();
-	Physics::Get().DestroyCircle(m_hCircle);
+	m_ball.reset();
 }
 
 void Ball::HandleEvents(PongEventList const &arrEvents)
@@ -37,17 +37,19 @@ void Ball::HandleEvents(PongEventList const &arrEvents)
 
 void Ball::Update(uint64_t usdt)
 {
+	if (!m_ball) return;
+	Physics::BallProxy &ball = *m_ball;
+
 	// move
-	Physics::Circle &circle = Physics::Get().GetCircle(m_hCircle);
-	circle.position.x += S_PER_US * usdt * circle.velocity.x;
-	circle.position.y += S_PER_US * usdt * circle.velocity.y;
+	ball.position.x += S_PER_US * usdt * ball.velocity.x;
+	ball.position.y += S_PER_US * usdt * ball.velocity.y;
 
 	// hit walls
-	bool hitTopWall = circle.velocity.y > 0 && (circle.position.y + circle.radius) >= TOP_WALL_POSITION_Y;
-	bool hitBottomWall = circle.velocity.y < 0 && (circle.position.y - circle.radius) <= BOTTOM_WALL_POSITION_Y;
+	bool hitTopWall = ball.velocity.y > 0 && (ball.position.y + ball.radius) >= TOP_WALL_POSITION_Y;
+	bool hitBottomWall = ball.velocity.y < 0 && (ball.position.y - ball.radius) <= BOTTOM_WALL_POSITION_Y;
 	if (hitTopWall || hitBottomWall) 
 	{ 
-		circle.velocity.y = -circle.velocity.y;
+		ball.velocity.y = -ball.velocity.y;
 	}
 }
 
@@ -58,9 +60,11 @@ void Ball::Render(
 	DirectX::XMMATRIX worldToView,
 	DirectX::XMMATRIX viewToClip)
 {
-	Physics::Circle &circle = Physics::Get().GetCircle(m_hCircle);
-	double left = circle.position.x - circle.radius;
-	double top = circle.position.y + circle.radius;
+	if (!m_ball) return;
+	Physics::BallProxy &ball = *m_ball;
+
+	double left = ball.position.x - ball.radius;
+	double top = ball.position.y + ball.radius;
 	objectToWorld = objectToWorld * DirectX::XMMatrixTranslation(left, top, 0.0f);
 	shader.Render(objectToWorld, worldToView, viewToClip);
 	m_model.Render(renderer);
@@ -68,22 +72,28 @@ void Ball::Render(
 
 Vector2D Ball::GetVelocity() const
 {
-	Physics::Circle &circle = Physics::Get().GetCircle(m_hCircle);
-	return Vector2D{ circle.velocity.x, circle.velocity.y };
+	return m_ball 
+		? Vector2D{ m_ball->velocity.x, m_ball->velocity.y }
+		: Vector2D{ 0, 0 };
 }
 
 void Ball::SetVelocity(Vector2D const &velocity)
 {
-	Physics::Circle &circle = Physics::Get().GetCircle(m_hCircle);
-	circle.velocity.x = velocity.x; 
-	circle.velocity.y = velocity.y;
+	if (m_ball)
+	{
+		m_ball->velocity.x = velocity.x;
+		m_ball->velocity.y = velocity.y;
+	}
 }
 
 Box2D Ball::GetBounds() const
 {
-	Physics::Circle &circle = Physics::Get().GetCircle(m_hCircle);
-	double left = circle.position.x - circle.radius;
-	double top = circle.position.y + circle.radius;
-	double size = circle.radius * 2.0;
+	if (!m_ball)
+	{
+		return { 0, 0, 0, 0 };
+	}
+	double left = m_ball->position.x - m_ball->radius;
+	double top = m_ball->position.y + m_ball->radius;
+	double size = m_ball->radius * 2.0;
 	return { left, top, size, size };
 }

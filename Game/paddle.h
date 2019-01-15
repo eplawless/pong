@@ -7,6 +7,7 @@
 #include "../Engine/Graphics/Drivers/Renderer.h"
 #include "../Engine/Graphics/Materials/Shader.h"
 #include "../Engine/Graphics/model.h"
+#include "../Engine/Libraries/nonstd/optional.hpp"
 #include "../Engine/Physics/Physics.h"
 #include "../Engine/utility.h"
 
@@ -37,6 +38,6 @@ private: // members
 	Movement m_moveState;
 	double m_defaultPositionX;
 	double m_moveSpeed;
-	Physics::ObjectHandle m_hBox;
+	nonstd::optional<Physics::BoxProxy> m_box;
 	Model m_model;
 };

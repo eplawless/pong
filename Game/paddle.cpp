@@ -16,8 +16,7 @@ Paddle::Paddle(float positionX, Side side)
 
 void Paddle::Reset()
 {
-	Physics::Box &box = Physics::Get().GetBox(m_hBox);
-	box.position.y = 0.0;
+	if (m_box) { m_box->position.y = 0.0; }
 	m_moveState = Movement::Stopped;
 }
 
@@ -25,14 +24,14 @@ bool Paddle::Initialize(
 	Window &window,
 	Renderer &renderer)
 {
-	m_hBox = Physics::Get().CreateBox(m_defaultPositionX, 0.0, 0.2, 1.0);
+	m_box.emplace(Physics::Get().CreateBox(m_defaultPositionX, 0.0, 0.2, 1.0));
 	return m_model.Initialize(window, renderer);
 }
 
 void Paddle::Shutdown()
 {
 	m_model.Shutdown();
-	Physics::Get().DestroyBox(m_hBox);
+	m_box.reset();
 }
 
 void Paddle::HandleEvents(PongEventList const &arrEvents)
@@ -50,9 +49,9 @@ void Paddle::HandleEvents(PongEventList const &arrEvents)
 
 void Paddle::Update(uint64_t usdt)
 {
-	Physics::Box &box = Physics::Get().GetBox(m_hBox);
-	box.velocity.y = m_moveState * m_moveSpeed;
-	box.position.y += S_PER_US * usdt * box.velocity.y;
+	if (!m_box) return;
+	m_box->velocity.y = m_moveState * m_moveSpeed;
+	m_box->position.y += S_PER_US * usdt * m_box->velocity.y;
 }
 
 void Paddle::Render(
@@ -62,14 +61,15 @@ void Paddle::Render(
 	DirectX::XMMATRIX worldToView,
 	DirectX::XMMATRIX viewToClip)
 {
-	Physics::Box &box = Physics::Get().GetBox(m_hBox);
-	objectToWorld = objectToWorld * DirectX::XMMatrixTranslation(box.position.x, box.position.y, 0.0f);
+	if (!m_box) return;
+	objectToWorld = objectToWorld * DirectX::XMMatrixTranslation(m_box->position.x, m_box->position.y, 0.0f);
 	shader.Render(objectToWorld, worldToView, viewToClip);
 	m_model.Render(renderer);
 }
 
 Box2D Paddle::GetBounds() const
 {
-	Physics::Box &box = Physics::Get().GetBox(m_hBox);
-	return { box.position.x, box.position.y, box.size.x, box.size.y };
+	return m_box 
+		? Box2D{ m_box->position.x, m_box->position.y, m_box->size.x, m_box->size.y }
+		: Box2D{ 0, 0, 0, 0 };
 }

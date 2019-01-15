@@ -6,6 +6,7 @@
 #include "../Engine/Graphics/Drivers/Renderer.h"
 #include "../Engine/Graphics/Materials/Shader.h"
 #include "../Engine/Graphics/model.h"
+#include "../Engine/Libraries/nonstd/optional.hpp"
 #include "../Engine/Physics/Physics.h"
 #include "../Engine/utility.h"
 #include "paddle.h"
@@ -31,6 +32,6 @@ public: // methods
 	Box2D GetBounds() const;
 
 private: // members
-	Physics::ObjectHandle m_hCircle;
+	nonstd::optional<Physics::BallProxy> m_ball;
 	Model m_model;
 };

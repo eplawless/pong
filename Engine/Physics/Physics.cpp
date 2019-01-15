@@ -10,53 +10,43 @@ Physics &Physics::Get()
 	return instance;
 }
 
-Physics::ObjectHandle Physics::CreateCircle(double x, double y, double radius)
+Physics::BallProxy Physics::CreateBall(double x, double y, double radius)
 {
-	return CreateCircle(x, y, 0, 0, radius);
+	return CreateBall(x, y, 0, 0, radius);
 }
 
-Physics::ObjectHandle Physics::CreateCircle(double x, double y, double vx, double vy, double radius)
+Physics::BallProxy Physics::CreateBall(double x, double y, double vx, double vy, double radius)
 {
-	ObjectHandle handle = CreateObjectHandle();
-	m_circleByHandle[handle] = { { x, y }, { vx, vy }, radius };
-	return handle;
+	ObjectHandle handle = CreateObjectHandle(ObjectType::Ball);
+	Ball &ball = m_ballByHandle[handle] = { 0, { x, y }, { vx, vy }, radius };
+	return BallProxy{ ball, handle, *this };
 }
 
-Physics::ObjectHandle Physics::CreateBox(double top, double left, double width, double height)
+Physics::BoxProxy Physics::CreateBox(double top, double left, double width, double height)
 {
 	return CreateBox(top, left, 0, 0, width, height);
 }
 
-Physics::ObjectHandle Physics::CreateBox(double top, double left, double vx, double vy, double width, double height)
+Physics::BoxProxy Physics::CreateBox(double top, double left, double vx, double vy, double width, double height)
 {
-	ObjectHandle handle = CreateObjectHandle();
-	m_boxByHandle[handle] = { { top, left }, { vx, vy }, {width, height} };
-	return handle;
+	ObjectHandle handle = CreateObjectHandle(ObjectType::Box);
+	Box &box = m_boxByHandle[handle] = { 0, { top, left }, { vx, vy }, { width, height } };
+	return BoxProxy{ box, handle, *this };
 }
 
-Physics::Circle &Physics::GetCircle(
-	ObjectHandle const &handle)
+bool Physics::Destroy(ObjectHandle const &handle)
 {
-	return m_circleByHandle.at(handle);
+	return m_ballByHandle.erase(handle) > 0 || m_boxByHandle.erase(handle) > 0;
 }
 
-Physics::Box & Physics::GetBox(ObjectHandle const &handle)
+Physics::Physics()
+	: m_boxByHandle(0, m_hasher)
+	, m_ballByHandle(0, m_hasher)
 {
-	return m_boxByHandle.at(handle);
 }
 
-bool Physics::DestroyCircle(ObjectHandle const &handle)
+Physics::ObjectHandle Physics::CreateObjectHandle(ObjectType type)
 {
-	return m_circleByHandle.erase(handle) > 0;
-}
-
-bool Physics::DestroyBox(ObjectHandle const &handle)
-{
-	return m_boxByHandle.erase(handle) > 0;
-}
-
-Physics::ObjectHandle Physics::CreateObjectHandle()
-{
-	return ObjectHandle{ s_nextHandleId++ };
+	return ObjectHandle{ s_nextHandleId++, type };
 }
 
